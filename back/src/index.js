@@ -11,6 +11,9 @@ const routes = require('./routes');
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// CORS
+const cors = require('./middlewares/cors');
+app.use(cors);
 
 // Swagger Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {

@@ -7,6 +7,8 @@ Sistema completo para gerenciamento de bolões e sorteios desenvolvido em Node.j
 - **Node.js** - Runtime JavaScript
 - **Express** - Framework web
 - **Swagger** - Documentação interativa da API
+- **PostgreSQL** - Banco de dados (configurado)
+- **Dotenv** - Gerenciamento de variáveis de ambiente
 - **Nodemon** - Auto-reload em desenvolvimento
 
 ## 📦 Instalação
@@ -15,12 +17,35 @@ Sistema completo para gerenciamento de bolões e sorteios desenvolvido em Node.j
 # Instalar dependências
 npm install
 
+# Configurar variáveis de ambiente
+# Edite o arquivo .env.bolao com suas credenciais do PostgreSQL
+
 # Rodar em modo desenvolvimento
 npm run dev
 
 # Rodar em produção
 npm start
 ```
+
+## ⚙️ Configuração
+
+### Variáveis de Ambiente
+
+O projeto utiliza o arquivo `.env.bolao` para configuração:
+
+```env
+PORT=8080
+NODE_ENV=development
+
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=sorteio
+DB_USER=postgres
+DB_PASSWORD=sua_senha_aqui
+```
+
+**📖 Para mais detalhes sobre o banco de dados, veja [DATABASE.md](DATABASE.md)**
 
 ## 🌐 Servidor
 

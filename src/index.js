@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '.env.bolao' });
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
@@ -41,6 +42,12 @@ app.use('/api', routes);
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`Acesse: http://localhost:${PORT}`);
+  console.log(`Documentação: http://localhost:${PORT}/api-docs`);
+  console.log(`\nConfiguração do Banco:`);
+  console.log(`- Host: ${process.env.DB_HOST || 'localhost'}`);
+  console.log(`- Port: ${process.env.DB_PORT || '5432'}`);
+  console.log(`- Database: ${process.env.DB_NAME || 'sorteio'}`);
+  console.log(`- User: ${process.env.DB_USER || 'postgres'}`);
 });
 
 module.exports = app;

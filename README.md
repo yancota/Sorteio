@@ -13,6 +13,24 @@ Sistema completo para gerenciamento de bolões e sorteios desenvolvido em Node.j
 
 ## 📦 Instalação
 
+### Opção 1: Rodar com Docker (Recomendado) 🐳
+
+```bash
+# Subir API + PostgreSQL
+docker-compose up -d
+
+# Verificar logs
+docker-compose logs -f
+
+# Acessar
+# API: http://localhost:8080
+# Swagger: http://localhost:8080/api-docs
+```
+
+**📖 Para mais detalhes sobre Docker, veja [DOCKER.md](DOCKER.md)**
+
+### Opção 2: Rodar Localmente
+
 ```bash
 # Instalar dependências
 npm install

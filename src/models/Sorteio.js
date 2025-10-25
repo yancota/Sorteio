@@ -1,8 +1,9 @@
 class Sorteio {
-  constructor(id, valor, nome, valoresSorteados = []) {
+  constructor(id, valor, nome, bolao, valoresSorteados = []) {
     this.id = id;
     this.valor = valor; 
     this.nome = nome;
+    this.bolao = bolao; // Referência ao bolão
     this.valoresSorteados = valoresSorteados; 
   }
 
@@ -18,6 +19,10 @@ class Sorteio {
     return this.nome;
   }
 
+  getBolao() {
+    return this.bolao;
+  }
+
   getValoresSorteados() {
     return this.valoresSorteados;
   }
@@ -28,6 +33,10 @@ class Sorteio {
 
   setNome(nome) {
     this.nome = nome;
+  }
+
+  setBolao(bolao) {
+    this.bolao = bolao;
   }
 
   setValoresSorteados(valoresSorteados) {
@@ -48,6 +57,7 @@ class Sorteio {
       id: this.id,
       valor: this.valor,
       nome: this.nome,
+      bolao: this.bolao ? (typeof this.bolao === 'object' ? this.bolao.id : this.bolao) : null,
       valoresSorteados: this.valoresSorteados
     };
   }

@@ -17,26 +17,18 @@ const ApostaController = require('../controllers/ApostaController');
  *             type: object
  *             required:
  *               - inscricaoBolao
- *               - sorteio
  *               - valoresEscolhidos
  *             properties:
  *               inscricaoBolao:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
- *               sorteio:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                     example: 1
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID da inscrição no bolão
  *               valoresEscolhidos:
  *                 type: array
  *                 items:
  *                   type: string
  *                 example: ["10", "25", "33", "42", "51", "60"]
+ *                 description: Números escolhidos (valem para todos os sorteios do bolão)
  *     responses:
  *       201:
  *         description: Aposta criada com sucesso
@@ -110,22 +102,22 @@ router.get('/inscricao/:inscricaoId', ApostaController.getByInscricao);
 
 /**
  * @swagger
- * /api/apostas/sorteio/{sorteioId}:
+ * /api/apostas/bolao/{bolaoId}:
  *   get:
- *     summary: Buscar apostas por sorteio
+ *     summary: Buscar apostas por bolão
  *     tags: [Apostas]
  *     parameters:
  *       - in: path
- *         name: sorteioId
+ *         name: bolaoId
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do sorteio
+ *         description: ID do bolão
  *     responses:
  *       200:
- *         description: Lista de apostas do sorteio
+ *         description: Lista de apostas do bolão
  */
-router.get('/sorteio/:sorteioId', ApostaController.getBySorteio);
+router.get('/bolao/:bolaoId', ApostaController.getByBolao);
 
 /**
  * @swagger
@@ -163,9 +155,9 @@ router.put('/:id', ApostaController.update);
 
 /**
  * @swagger
- * /api/apostas/{id}/calcular-acertos:
+ * /api/apostas/{id}/calcular-acertos/{sorteioId}:
  *   post:
- *     summary: Calcular acertos de uma aposta específica
+ *     summary: Calcular acertos de uma aposta para um sorteio específico
  *     tags: [Apostas]
  *     parameters:
  *       - in: path
@@ -174,43 +166,35 @@ router.put('/:id', ApostaController.update);
  *         schema:
  *           type: integer
  *         description: ID da aposta
+ *       - in: path
+ *         name: sorteioId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do sorteio
  *     responses:
  *       200:
  *         description: Acertos calculados com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 data:
- *                   type: object
- *                   properties:
- *                     apostaId:
- *                       type: integer
- *                     quantidadeAcertos:
- *                       type: integer
- *                     valoresAcertados:
- *                       type: array
- *                       items:
- *                         type: string
  *       400:
  *         description: Sorteio ainda não foi realizado
  *       404:
  *         description: Aposta não encontrada
  */
-router.post('/:id/calcular-acertos', ApostaController.calcularAcertos);
+router.post('/:id/calcular-acertos/:sorteioId', ApostaController.calcularAcertos);
 
 /**
  * @swagger
- * /api/apostas/sorteio/{sorteioId}/calcular-acertos:
+ * /api/apostas/bolao/{bolaoId}/sorteio/{sorteioId}/calcular-acertos:
  *   post:
- *     summary: Calcular acertos de todas as apostas de um sorteio
+ *     summary: Calcular acertos de todas as apostas de um bolão para um sorteio
  *     tags: [Apostas]
  *     parameters:
+ *       - in: path
+ *         name: bolaoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do bolão
  *       - in: path
  *         name: sorteioId
  *         required: true
@@ -220,32 +204,10 @@ router.post('/:id/calcular-acertos', ApostaController.calcularAcertos);
  *     responses:
  *       200:
  *         description: Acertos calculados para todas as apostas
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                 message:
- *                   type: string
- *                 data:
- *                   type: array
- *                   items:
- *                     type: object
- *                     properties:
- *                       apostaId:
- *                         type: integer
- *                       quantidadeAcertos:
- *                         type: integer
- *                       valoresAcertados:
- *                         type: array
- *                         items:
- *                           type: string
  *       400:
  *         description: Erro ao calcular acertos
  */
-router.post('/sorteio/:sorteioId/calcular-acertos', ApostaController.calcularAcertosPorSorteio);
+router.post('/bolao/:bolaoId/sorteio/:sorteioId/calcular-acertos', ApostaController.calcularAcertosPorSorteio);
 
 /**
  * @swagger

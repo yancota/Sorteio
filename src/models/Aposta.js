@@ -1,8 +1,7 @@
 class Aposta {
-  constructor(id, inscricaoBolao, sorteio, valoresEscolhidos = [], valoresAcertados = []) {
+  constructor(id, inscricaoBolao, valoresEscolhidos = [], valoresAcertados = []) {
     this.id = id;
     this.inscricaoBolao = inscricaoBolao;
-    this.sorteio = sorteio; 
     this.valoresEscolhidos = valoresEscolhidos; 
     this.valoresAcertados = valoresAcertados; 
   }
@@ -13,10 +12,6 @@ class Aposta {
 
   getInscricaoBolao() {
     return this.inscricaoBolao;
-  }
-
-  getSorteio() {
-    return this.sorteio;
   }
 
   getValoresEscolhidos() {
@@ -31,10 +26,6 @@ class Aposta {
     this.inscricaoBolao = inscricaoBolao;
   }
 
-  setSorteio(sorteio) {
-    this.sorteio = sorteio;
-  }
-
   setValoresEscolhidos(valoresEscolhidos) {
     this.valoresEscolhidos = valoresEscolhidos;
   }
@@ -47,28 +38,23 @@ class Aposta {
     this.valoresEscolhidos.push(valor);
   }
 
-  calcularAcertos() {
-    if (!this.sorteio || !this.sorteio.valoresSorteados) {
+  // Calcula acertos comparando com um sorteio específico
+  calcularAcertos(sorteio) {
+    if (!sorteio || !sorteio.valoresSorteados) {
       return 0;
     }
     
-    this.valoresAcertados = this.valoresEscolhidos.filter(valor => 
-      this.sorteio.valoresSorteados.includes(valor)
+    const acertos = this.valoresEscolhidos.filter(valor => 
+      sorteio.valoresSorteados.includes(valor)
     );
     
-    return this.valoresAcertados.length;
+    return acertos.length;
   }
 
   toJSON() {
     return {
       id: this.id,
-      inscricaoBolao: this.inscricaoBolao ? {
-        id: this.inscricaoBolao.id
-      } : null,
-      sorteio: this.sorteio ? {
-        id: this.sorteio.id,
-        nome: this.sorteio.nome
-      } : null,
+      inscricaoBolao: this.inscricaoBolao ? (typeof this.inscricaoBolao === 'object' ? this.inscricaoBolao.id : this.inscricaoBolao) : null,
       valoresEscolhidos: this.valoresEscolhidos,
       valoresAcertados: this.valoresAcertados
     };

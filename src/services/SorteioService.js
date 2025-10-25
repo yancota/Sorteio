@@ -13,6 +13,10 @@ class SorteioService {
       throw new Error('Valor do sorteio deve ser maior que zero');
     }
 
+    if (!sorteioData.bolao) {
+      throw new Error('Bolão é obrigatório para criar um sorteio');
+    }
+
     return await SorteioRepository.create(sorteioData);
   }
 
@@ -33,6 +37,11 @@ class SorteioService {
   // Buscar sorteios por nome
   async getByNome(nome) {
     return await SorteioRepository.findByNome(nome);
+  }
+
+  // Buscar sorteios por bolão
+  async getByBolao(bolaoId) {
+    return await SorteioRepository.findByBolao(bolaoId);
   }
 
   // Atualizar sorteio

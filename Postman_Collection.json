@@ -1,0 +1,986 @@
+{
+  "info": {
+    "name": "Sistema de Sorteio - API",
+    "description": "Collection completa da API de Bolões e Sorteios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Criar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"telefone\": \"11999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos os Usuários",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Usuário por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Usuários por Grupo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/grupo/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios", "grupo", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Usuário",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"telefone\": \"11999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Grupos",
+      "item": [
+        {
+          "name": "Criar Grupo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Grupo dos Amigos\",\n  \"usuarioResponsavel\": {\n    \"id\": 1\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/grupos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "grupos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos os Grupos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/grupos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "grupos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Grupo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/grupos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "grupos", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Grupos por Responsável",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/grupos/responsavel/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "grupos", "responsavel", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Grupo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Grupo Atualizado\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/grupos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "grupos", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Grupo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/grupos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "grupos", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sorteios",
+      "item": [
+        {
+          "name": "Criar Sorteio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Mega Sena - Concurso 2500\",\n  \"valor\": 5.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos os Sorteios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Sorteio por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Sorteios por Nome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios/buscar/mega",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios", "buscar", "mega"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Sorteio",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Mega Sena - Concurso 2501\",\n  \"valor\": 6.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Realizar Sorteio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valoresSorteados\": [\"10\", \"25\", \"33\", \"42\", \"51\", \"60\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios/1/realizar",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios", "1", "realizar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Sorteio",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bolões",
+      "item": [
+        {
+          "name": "Criar Bolão",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bolão da Copa 2026\",\n  \"quantidadeCampeao\": 3,\n  \"reiniciarBolao\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos os Bolões",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Bolões Ativos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/ativos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "ativos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Bolão por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Bolões por Nome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/buscar/copa",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "buscar", "copa"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Bolão",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bolão da Copa 2026 - Atualizado\",\n  \"quantidadeCampeao\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Adicionar Sorteio ao Bolão",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1/sorteios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1", "sorteios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remover Sorteio do Bolão",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1/sorteios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1", "sorteios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reiniciar Bolão",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1/reiniciar",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1", "reiniciar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Bolão",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inscrições",
+      "item": [
+        {
+          "name": "Criar Inscrição",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bolao\": {\n    \"id\": 1\n  },\n  \"usuario\": {\n    \"id\": 1\n  },\n  \"apto\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todas as Inscrições",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Inscrição por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Inscrições por Bolão",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/bolao/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "bolao", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Inscrições por Usuário",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/usuario/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "usuario", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Inscrições Aptas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/bolao/1/aptas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "bolao", "1", "aptas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obter Ranking do Bolão",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/bolao/1/ranking",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "bolao", "1", "ranking"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Inscrição",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"apto\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Adicionar Pontuação",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pontos\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/1/pontuacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "1", "pontuacao"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Resetar Pontuação",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/1/resetar-pontuacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "1", "resetar-pontuacao"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Inscrição",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Apostas",
+      "item": [
+        {
+          "name": "Criar Aposta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inscricaoBolao\": {\n    \"id\": 1\n  },\n  \"sorteio\": {\n    \"id\": 1\n  },\n  \"valoresEscolhidos\": [\"10\", \"25\", \"33\", \"42\", \"51\", \"60\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todas as Apostas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Aposta por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Apostas por Inscrição",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/inscricao/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "inscricao", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Apostas por Sorteio",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/sorteio/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "sorteio", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Aposta",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valoresEscolhidos\": [\"15\", \"20\", \"35\", \"40\", \"55\", \"60\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calcular Acertos de uma Aposta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/1/calcular-acertos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "1", "calcular-acertos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calcular Acertos de Todas as Apostas do Sorteio",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/sorteio/1/calcular-acertos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "sorteio", "1", "calcular-acertos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Aposta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🚀 Fluxo Completo de Teste",
+      "item": [
+        {
+          "name": "1. Criar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"telefone\": \"11999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "usuarios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Criar Sorteio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Mega Sena - Concurso 2500\",\n  \"valor\": 5.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Criar Bolão",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Bolão da Copa 2026\",\n  \"quantidadeCampeao\": 3,\n  \"reiniciarBolao\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Adicionar Sorteio ao Bolão",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/boloes/1/sorteios/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "boloes", "1", "sorteios", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Criar Inscrição",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bolao\": {\n    \"id\": 1\n  },\n  \"usuario\": {\n    \"id\": 1\n  },\n  \"apto\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Criar Aposta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inscricaoBolao\": {\n    \"id\": 1\n  },\n  \"sorteio\": {\n    \"id\": 1\n  },\n  \"valoresEscolhidos\": [\"10\", \"25\", \"33\", \"42\", \"51\", \"60\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Realizar Sorteio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valoresSorteados\": [\"10\", \"25\", \"33\", \"42\", \"51\", \"60\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sorteios/1/realizar",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sorteios", "1", "realizar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8. Calcular Acertos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/apostas/1/calcular-acertos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "apostas", "1", "calcular-acertos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Ver Ranking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inscricoes/bolao/1/ranking",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inscricoes", "bolao", "1", "ranking"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

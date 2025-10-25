@@ -67,10 +67,10 @@ class ApostaController {
     }
   }
 
-  // GET /apostas/sorteio/:sorteioId - Buscar apostas por sorteio
-  async getBySorteio(req, res) {
+  // GET /apostas/bolao/:bolaoId - Buscar apostas por bolão
+  async getByBolao(req, res) {
     try {
-      const apostas = await ApostaService.getBySorteio(req.params.sorteioId);
+      const apostas = await ApostaService.getByBolao(req.params.bolaoId);
       return res.status(200).json({
         success: true,
         data: apostas
@@ -100,10 +100,10 @@ class ApostaController {
     }
   }
 
-  // POST /apostas/:id/calcular-acertos - Calcular acertos da aposta
+  // POST /apostas/:id/calcular-acertos/:sorteioId - Calcular acertos da aposta para um sorteio
   async calcularAcertos(req, res) {
     try {
-      const resultado = await ApostaService.calcularAcertos(req.params.id);
+      const resultado = await ApostaService.calcularAcertos(req.params.id, req.params.sorteioId);
       return res.status(200).json({
         success: true,
         message: 'Acertos calculados com sucesso',
@@ -117,10 +117,10 @@ class ApostaController {
     }
   }
 
-  // POST /apostas/sorteio/:sorteioId/calcular-acertos - Calcular acertos de todas as apostas de um sorteio
+  // POST /apostas/bolao/:bolaoId/sorteio/:sorteioId/calcular-acertos - Calcular acertos de todas as apostas
   async calcularAcertosPorSorteio(req, res) {
     try {
-      const resultados = await ApostaService.calcularAcertosPorSorteio(req.params.sorteioId);
+      const resultados = await ApostaService.calcularAcertosPorSorteio(req.params.bolaoId, req.params.sorteioId);
       return res.status(200).json({
         success: true,
         message: 'Acertos calculados com sucesso',

@@ -14,7 +14,9 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      # O init-db.sql só executa na primeira criação do volume
+      # Se você já criou o banco, comente a linha abaixo:
+      # - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - sorteio_network
     healthcheck:

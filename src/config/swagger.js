@@ -98,6 +98,10 @@ const options = {
               format: 'double',
               description: 'Valor do sorteio'
             },
+            bolao: {
+              type: 'integer',
+              description: 'ID do bolão ao qual o sorteio pertence'
+            },
             valoresSorteados: {
               type: 'array',
               items: {
@@ -165,17 +169,15 @@ const options = {
               description: 'ID da aposta'
             },
             inscricaoBolao: {
-              $ref: '#/components/schemas/InscricaoBolao'
-            },
-            sorteio: {
-              $ref: '#/components/schemas/Sorteio'
+              type: 'integer',
+              description: 'ID da inscrição no bolão'
             },
             valoresEscolhidos: {
               type: 'array',
               items: {
                 type: 'string'
               },
-              description: 'Valores escolhidos pelo usuário'
+              description: 'Valores escolhidos (valem para todos os sorteios do bolão)'
             },
             valoresAcertados: {
               type: 'array',

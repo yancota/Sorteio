@@ -32,24 +32,20 @@ class ApostaRepository {
 
   // Buscar apostas por inscrição
   async findByInscricao(inscricaoId) {
-    return this.apostas.filter(a => 
-      a.inscricaoBolao && a.inscricaoBolao.id === parseInt(inscricaoId)
-    );
+    return this.apostas.filter(a => {
+      if (!a.inscricaoBolao) return false;
+      const inscricaoDaAposta = typeof a.inscricaoBolao === 'object' ? a.inscricaoBolao.id : a.inscricaoBolao;
+      return inscricaoDaAposta === parseInt(inscricaoId);
+    });
   }
 
-  // Buscar apostas por sorteio
-  async findBySorteio(sorteioId) {
-    return this.apostas.filter(a => 
-      a.sorteio && a.sorteio.id === parseInt(sorteioId)
-    );
-  }
-
-  // Buscar aposta específica de inscrição em sorteio
-  async findByInscricaoAndSorteio(inscricaoId, sorteioId) {
-    return this.apostas.find(a => 
-      a.inscricaoBolao && a.inscricaoBolao.id === parseInt(inscricaoId) &&
-      a.sorteio && a.sorteio.id === parseInt(sorteioId)
-    );
+  // Buscar aposta específica de inscrição
+  async findByInscricaoSingle(inscricaoId) {
+    return this.apostas.find(a => {
+      if (!a.inscricaoBolao) return false;
+      const inscricaoDaAposta = typeof a.inscricaoBolao === 'object' ? a.inscricaoBolao.id : a.inscricaoBolao;
+      return inscricaoDaAposta === parseInt(inscricaoId);
+    });
   }
 
   // Atualizar aposta
@@ -86,9 +82,11 @@ class ApostaRepository {
 
   // Deletar todas as apostas de uma inscrição
   async deleteByInscricao(inscricaoId) {
-    this.apostas = this.apostas.filter(a => 
-      !a.inscricaoBolao || a.inscricaoBolao.id !== parseInt(inscricaoId)
-    );
+    this.apostas = this.apostas.filter(a => {
+      if (!a.inscricaoBolao) return true;
+      const inscricaoDaAposta = typeof a.inscricaoBolao === 'object' ? a.inscricaoBolao.id : a.inscricaoBolao;
+      return inscricaoDaAposta !== parseInt(inscricaoId);
+    });
     return true;
   }
 }

@@ -67,6 +67,22 @@ class SorteioController {
     }
   }
 
+  // GET /sorteios/bolao/:bolaoId - Buscar sorteios por bolão
+  async getByBolao(req, res) {
+    try {
+      const sorteios = await SorteioService.getByBolao(req.params.bolaoId);
+      return res.status(200).json({
+        success: true,
+        data: sorteios
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message
+      });
+    }
+  }
+
   // PUT /sorteios/:id - Atualizar sorteio
   async update(req, res) {
     try {

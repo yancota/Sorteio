@@ -104,6 +104,25 @@ router.get('/buscar/:nome', SorteioController.getByNome);
 
 /**
  * @swagger
+ * /api/sorteios/bolao/{bolaoId}:
+ *   get:
+ *     summary: Buscar sorteios por bolão
+ *     tags: [Sorteios]
+ *     parameters:
+ *       - in: path
+ *         name: bolaoId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID do bolão
+ *     responses:
+ *       200:
+ *         description: Lista de sorteios do bolão
+ */
+router.get('/bolao/:bolaoId', SorteioController.getByBolao);
+
+/**
+ * @swagger
  * /api/sorteios/{id}:
  *   put:
  *     summary: Atualizar sorteio

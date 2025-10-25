@@ -36,6 +36,15 @@ class SorteioRepository {
     );
   }
 
+  // Buscar sorteios por bolão
+  async findByBolao(bolaoId) {
+    return this.sorteios.filter(s => {
+      if (!s.bolao) return false;
+      const bolaoDoSorteio = typeof s.bolao === 'object' ? s.bolao.id : s.bolao;
+      return bolaoDoSorteio === parseInt(bolaoId);
+    });
+  }
+
   // Atualizar sorteio
   async update(id, sorteioData) {
     const index = this.sorteios.findIndex(s => s.id === parseInt(id));

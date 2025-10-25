@@ -1,5 +1,6 @@
 -- Script de inicialização do banco de dados
--- Criado automaticamente quando o container PostgreSQL é iniciado
+-- Este script só será executado na PRIMEIRA CRIAÇÃO do volume do PostgreSQL
+-- Se o banco já existe, este script NÃO será executado novamente
 
 -- Tabela de Grupos
 CREATE TABLE IF NOT EXISTS grupos (
@@ -21,21 +22,19 @@ CREATE TABLE IF NOT EXISTS usuarios (
 );
 
 -- Adicionar FK de usuário responsável após criar a tabela de usuários
-ALTER TABLE grupos 
-  ADD CONSTRAINT fk_usuario_responsavel 
-  FOREIGN KEY (usuario_responsavel_id) 
-  REFERENCES usuarios(id) 
-  ON DELETE SET NULL;
-
--- Tabela de Sorteios
-CREATE TABLE IF NOT EXISTS sorteios (
-  id SERIAL PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  valor DECIMAL(10,2) NOT NULL,
-  valores_sorteados TEXT[],
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- Verifica se a constraint já existe antes de adicionar
+DO $$ 
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'fk_usuario_responsavel'
+  ) THEN
+    ALTER TABLE grupos 
+      ADD CONSTRAINT fk_usuario_responsavel 
+      FOREIGN KEY (usuario_responsavel_id) 
+      REFERENCES usuarios(id) 
+      ON DELETE SET NULL;
+  END IF;
+END $$;
 
 -- Tabela de Bolões
 CREATE TABLE IF NOT EXISTS boloes (
@@ -47,13 +46,19 @@ CREATE TABLE IF NOT EXISTS boloes (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabela de relacionamento Bolão-Sorteio
-CREATE TABLE IF NOT EXISTS boloes_sorteios (
+-- Tabela de Sorteios (agora vinculados diretamente ao bolão)
+CREATE TABLE IF NOT EXISTS sorteios (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  valor DECIMAL(10,2) NOT NULL,
   bolao_id INTEGER REFERENCES boloes(id) ON DELETE CASCADE,
-  sorteio_id INTEGER REFERENCES sorteios(id) ON DELETE CASCADE,
+  valores_sorteados TEXT[],
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (bolao_id, sorteio_id)
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Remover tabela de relacionamento (não é mais necessária)
+-- CREATE TABLE IF NOT EXISTS boloes_sorteios ...
 
 -- Tabela de Inscrições
 CREATE TABLE IF NOT EXISTS inscricoes_bolao (
@@ -67,25 +72,24 @@ CREATE TABLE IF NOT EXISTS inscricoes_bolao (
   UNIQUE(bolao_id, usuario_id)
 );
 
--- Tabela de Apostas
+-- Tabela de Apostas (agora referencia apenas a inscrição, não mais o sorteio)
 CREATE TABLE IF NOT EXISTS apostas (
   id SERIAL PRIMARY KEY,
   inscricao_bolao_id INTEGER REFERENCES inscricoes_bolao(id) ON DELETE CASCADE,
-  sorteio_id INTEGER REFERENCES sorteios(id) ON DELETE CASCADE,
   valores_escolhidos TEXT[] NOT NULL,
   valores_acertados TEXT[],
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(inscricao_bolao_id, sorteio_id)
+  UNIQUE(inscricao_bolao_id)
 );
 
 -- Criar índices para melhorar performance
 CREATE INDEX IF NOT EXISTS idx_usuarios_telefone ON usuarios(telefone);
 CREATE INDEX IF NOT EXISTS idx_usuarios_grupo ON usuarios(grupo_id);
+CREATE INDEX IF NOT EXISTS idx_sorteios_bolao ON sorteios(bolao_id);
 CREATE INDEX IF NOT EXISTS idx_inscricoes_bolao ON inscricoes_bolao(bolao_id);
 CREATE INDEX IF NOT EXISTS idx_inscricoes_usuario ON inscricoes_bolao(usuario_id);
 CREATE INDEX IF NOT EXISTS idx_apostas_inscricao ON apostas(inscricao_bolao_id);
-CREATE INDEX IF NOT EXISTS idx_apostas_sorteio ON apostas(sorteio_id);
 
 -- Inserir dados de exemplo (opcional)
 -- INSERT INTO usuarios (nome, telefone) VALUES ('Admin', '11999999999');

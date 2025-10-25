@@ -36,7 +36,11 @@ class UsuarioRepository {
 
   // Buscar usuários por grupo
   async findByGrupo(grupoId) {
-    return this.usuarios.filter(u => u.grupo && u.grupo.id === parseInt(grupoId));
+    return this.usuarios.filter(u => {
+      if (!u.grupo) return false;
+      const grupoDoUsuario = typeof u.grupo === 'object' ? u.grupo.id : u.grupo;
+      return grupoDoUsuario === parseInt(grupoId);
+    });
   }
 
   // Atualizar usuário

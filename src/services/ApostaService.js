@@ -7,21 +7,18 @@ class ApostaService {
   // Criar nova aposta
   async create(apostaData) {
     // Validações
-    if (!apostaData.inscricaoBolao) {
+    const inscricao_bolao_id = apostaData.inscricao_bolao_id || apostaData.inscricaoBolao_id || apostaData.inscricaoBolao?.id;
+    if (!inscricao_bolao_id) {
       throw new Error('Inscrição no bolão é obrigatória');
     }
 
-    if (!apostaData.valoresEscolhidos || apostaData.valoresEscolhidos.length === 0) {
+    const valores_escolhidos = apostaData.valores_escolhidos || apostaData.valoresEscolhidos;
+    if (!valores_escolhidos || valores_escolhidos.length === 0) {
       throw new Error('Valores escolhidos são obrigatórios');
     }
 
-    // Normalizar inscricaoBolao para ID se for objeto
-    const inscricaoId = typeof apostaData.inscricaoBolao === 'object' 
-      ? apostaData.inscricaoBolao.id 
-      : apostaData.inscricaoBolao;
-
     // Verificar se inscrição existe
-    const inscricao = await InscricaoBolaoRepository.findById(inscricaoId);
+    const inscricao = await InscricaoBolaoRepository.findById(inscricao_bolao_id);
     if (!inscricao) {
       throw new Error('Inscrição não encontrada');
     }
@@ -32,12 +29,15 @@ class ApostaService {
     }
 
     // Verificar se já existe aposta para esta inscrição
-    const apostaExistente = await ApostaRepository.findByInscricao(inscricaoId);
+    const apostaExistente = await ApostaRepository.findByInscricao(inscricao.id);
     if (apostaExistente && apostaExistente.length > 0) {
       throw new Error('Já existe uma aposta para esta inscrição');
     }
 
-    return await ApostaRepository.create(apostaData);
+    return await ApostaRepository.create({
+      inscricao_bolao_id,
+      valores_escolhidos
+    });
   }
 
   // Buscar todas as apostas

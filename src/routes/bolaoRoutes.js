@@ -17,11 +17,17 @@ const BolaoController = require('../controllers/BolaoController');
  *             type: object
  *             required:
  *               - nome
+ *               - valor
  *               - quantidadeCampeao
  *             properties:
  *               nome:
  *                 type: string
  *                 example: Bolão da Copa
+ *               valor:
+ *                 type: number
+ *                 format: double
+ *                 example: 10.00
+ *                 description: Valor do bolão
  *               quantidadeCampeao:
  *                 type: integer
  *                 example: 3

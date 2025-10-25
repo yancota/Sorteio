@@ -1,7 +1,8 @@
 class Bolao {
-  constructor(id, nome, sorteios = [], quantidadeCampeao, reiniciarBolao = false) {
+  constructor(id, nome, valor, sorteios = [], quantidadeCampeao, reiniciarBolao = false) {
     this.id = id;
     this.nome = nome;
+    this.valor = valor; // Valor do bolão
     this.sorteios = sorteios; 
     this.quantidadeCampeao = quantidadeCampeao; 
     this.reiniciarBolao = reiniciarBolao; 
@@ -14,6 +15,10 @@ class Bolao {
 
   getNome() {
     return this.nome;
+  }
+
+  getValor() {
+    return this.valor;
   }
 
   getSorteios() {
@@ -30,6 +35,10 @@ class Bolao {
 
   setNome(nome) {
     this.nome = nome;
+  }
+
+  setValor(valor) {
+    this.valor = valor;
   }
 
   setSorteios(sorteios) {
@@ -58,6 +67,7 @@ class Bolao {
     return {
       id: this.id,
       nome: this.nome,
+      valor: this.valor,
       sorteios: this.sorteios.map(s => s.toJSON()),
       quantidadeCampeao: this.quantidadeCampeao,
       reiniciarBolao: this.reiniciarBolao

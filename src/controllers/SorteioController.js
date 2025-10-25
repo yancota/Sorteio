@@ -100,12 +100,10 @@ class SorteioController {
     }
   }
 
-  // POST /sorteios/:id/realizar - Realizar sorteio
   async realizarSorteio(req, res) {
     try {
       const sorteio = await SorteioService.realizarSorteio(
-        req.params.id,
-        req.body.valoresSorteados
+        req.params.id
       );
       return res.status(200).json({
         success: true,

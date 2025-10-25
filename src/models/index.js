@@ -13,5 +13,5 @@ module.exports = {
   Bolao,
   Sorteio,
   InscricaoBolao,
-  Aposta
+  Aposta,
 };

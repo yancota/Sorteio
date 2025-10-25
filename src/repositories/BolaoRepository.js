@@ -1,86 +1,57 @@
-// Repository para gerenciar dados de Bolões
+const { Pool } = require('pg');
+const dbConfig = require('../config/database');
+const pool = new Pool(dbConfig);
 
 class BolaoRepository {
-  constructor() {
-    this.boloes = [];
-    this.nextId = 1;
-  }
-
   // Criar um novo bolão
   async create(bolaoData) {
-    const bolao = {
-      id: this.nextId++,
-      ...bolaoData,
-      sorteios: bolaoData.sorteios || [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.boloes.push(bolao);
-    return bolao;
+    const { nome, valor, quantidadeCampeao, reiniciarBolao } = bolaoData;
+    const result = await pool.query(
+      `INSERT INTO boloes (nome, valor, quantidade_campeao, reiniciar_bolao, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *`,
+      [nome, valor, quantidadeCampeao, reiniciarBolao || false]
+    );
+    return result.rows[0];
   }
 
   // Buscar todos os bolões
   async findAll() {
-    return this.boloes;
+    const result = await pool.query('SELECT * FROM boloes');
+    return result.rows;
   }
 
   // Buscar bolão por ID
   async findById(id) {
-    return this.boloes.find(b => b.id === parseInt(id));
+    const result = await pool.query('SELECT * FROM boloes WHERE id = $1', [id]);
+    return result.rows[0] || null;
   }
 
   // Buscar bolões por nome
   async findByNome(nome) {
-    return this.boloes.filter(b => 
-      b.nome.toLowerCase().includes(nome.toLowerCase())
-    );
+    const result = await pool.query('SELECT * FROM boloes WHERE LOWER(nome) LIKE $1', [`%${nome.toLowerCase()}%`]);
+    return result.rows;
   }
 
   // Buscar bolões ativos (não reiniciados)
   async findAtivos() {
-    return this.boloes.filter(b => !b.reiniciarBolao);
+    const result = await pool.query('SELECT * FROM boloes WHERE reiniciar_bolao = false');
+    return result.rows;
   }
 
   // Atualizar bolão
   async update(id, bolaoData) {
-    const index = this.boloes.findIndex(b => b.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.boloes[index] = {
-      ...this.boloes[index],
-      ...bolaoData,
-      updatedAt: new Date()
-    };
-    return this.boloes[index];
-  }
-
-  // Adicionar sorteio ao bolão
-  async addSorteio(id, sorteio) {
-    const bolao = await this.findById(id);
-    if (!bolao) return null;
-
-    bolao.sorteios.push(sorteio);
-    bolao.updatedAt = new Date();
-    return bolao;
-  }
-
-  // Remover sorteio do bolão
-  async removeSorteio(id, sorteioId) {
-    const bolao = await this.findById(id);
-    if (!bolao) return null;
-
-    bolao.sorteios = bolao.sorteios.filter(s => s.id !== parseInt(sorteioId));
-    bolao.updatedAt = new Date();
-    return bolao;
+    const { nome, valor, quantidadeCampeao, reiniciarBolao } = bolaoData;
+    const result = await pool.query(
+      `UPDATE boloes SET nome = $1, valor = $2, quantidade_campeao = $3, reiniciar_bolao = $4, updated_at = NOW() WHERE id = $5 RETURNING *`,
+      [nome, valor, quantidadeCampeao, reiniciarBolao || false, id]
+    );
+    return result.rows[0] || null;
   }
 
   // Deletar bolão
   async delete(id) {
-    const index = this.boloes.findIndex(b => b.id === parseInt(id));
-    if (index === -1) return false;
-
-    this.boloes.splice(index, 1);
-    return true;
+    const result = await pool.query('DELETE FROM boloes WHERE id = $1', [id]);
+    return result.rowCount > 0;
   }
 }
 

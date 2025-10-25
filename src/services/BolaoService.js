@@ -10,6 +10,10 @@ class BolaoService {
       throw new Error('Nome do bolão é obrigatório');
     }
 
+    if (!bolaoData.valor || bolaoData.valor <= 0) {
+      throw new Error('Valor do bolão deve ser maior que zero');
+    }
+
     if (!bolaoData.quantidadeCampeao || bolaoData.quantidadeCampeao <= 0) {
       throw new Error('Quantidade de campeões deve ser maior que zero');
     }
@@ -19,7 +23,14 @@ class BolaoService {
 
   // Buscar todos os bolões
   async getAll() {
-    return await BolaoRepository.findAll();
+    // Busca todos os bolões e popula os sorteios de cada bolão
+    const boloes = await BolaoRepository.findAll();
+    const SorteioRepository = require('../repositories/SorteioRepository');
+    for (const bolao of boloes) {
+      // Se for SQL, aqui deveria buscar no banco
+      bolao.sorteios = await SorteioRepository.findByBolao(bolao.id);
+    }
+    return boloes;
   }
 
   // Buscar bolões ativos
@@ -46,6 +57,10 @@ class BolaoService {
     const bolaoExistente = await BolaoRepository.findById(id);
     if (!bolaoExistente) {
       throw new Error('Bolão não encontrado');
+    }
+
+    if (bolaoData.valor && bolaoData.valor <= 0) {
+      throw new Error('Valor do bolão deve ser maior que zero');
     }
 
     if (bolaoData.quantidadeCampeao && bolaoData.quantidadeCampeao <= 0) {

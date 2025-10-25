@@ -1,80 +1,66 @@
-// Repository para gerenciar dados de Sorteios
+const { Pool } = require('pg');
+const dbConfig = require('../config/database');
+const pool = new Pool(dbConfig);
 
 class SorteioRepository {
-  constructor() {
-    this.sorteios = [];
-    this.nextId = 1;
-  }
-
   // Criar um novo sorteio
   async create(sorteioData) {
-    const sorteio = {
-      id: this.nextId++,
-      ...sorteioData,
-      valoresSorteados: sorteioData.valoresSorteados || [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.sorteios.push(sorteio);
-    return sorteio;
+    const { nome, bolao_id, valoresSorteados } = sorteioData;
+    const result = await pool.query(
+      `INSERT INTO sorteios (nome, bolao_id, valores_sorteados, created_at, updated_at)
+       VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *`,
+      [nome, bolao_id, valoresSorteados || []]
+    );
+    return result.rows[0];
   }
 
   // Buscar todos os sorteios
   async findAll() {
-    return this.sorteios;
+    const result = await pool.query('SELECT * FROM sorteios');
+    return result.rows;
   }
 
   // Buscar sorteio por ID
   async findById(id) {
-    return this.sorteios.find(s => s.id === parseInt(id));
+    const result = await pool.query('SELECT * FROM sorteios WHERE id = $1', [id]);
+    return result.rows[0] || null;
   }
 
   // Buscar sorteios por nome
   async findByNome(nome) {
-    return this.sorteios.filter(s => 
-      s.nome.toLowerCase().includes(nome.toLowerCase())
-    );
+    const result = await pool.query('SELECT * FROM sorteios WHERE LOWER(nome) LIKE $1', [`%${nome.toLowerCase()}%`]);
+    return result.rows;
   }
 
   // Buscar sorteios por bolão
   async findByBolao(bolaoId) {
-    return this.sorteios.filter(s => {
-      if (!s.bolao) return false;
-      const bolaoDoSorteio = typeof s.bolao === 'object' ? s.bolao.id : s.bolao;
-      return bolaoDoSorteio === parseInt(bolaoId);
-    });
+    const result = await pool.query('SELECT * FROM sorteios WHERE bolao_id = $1', [bolaoId]);
+    return result.rows;
   }
 
   // Atualizar sorteio
   async update(id, sorteioData) {
-    const index = this.sorteios.findIndex(s => s.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.sorteios[index] = {
-      ...this.sorteios[index],
-      ...sorteioData,
-      updatedAt: new Date()
-    };
-    return this.sorteios[index];
+    const { nome, bolao_id, valoresSorteados } = sorteioData;
+    const result = await pool.query(
+      `UPDATE sorteios SET nome = $1, bolao_id = $2, valores_sorteados = $3, updated_at = NOW() WHERE id = $4 RETURNING *`,
+      [nome, bolao_id, valoresSorteados || [], id]
+    );
+    return result.rows[0] || null;
   }
 
   // Atualizar valores sorteados
   async updateValoresSorteados(id, valoresSorteados) {
-    const index = this.sorteios.findIndex(s => s.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.sorteios[index].valoresSorteados = valoresSorteados;
-    this.sorteios[index].updatedAt = new Date();
-    return this.sorteios[index];
+    const result = await pool.query(
+      `UPDATE sorteios SET valores_sorteados = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [valoresSorteados || [], id]
+    );
+    return result.rows[0] || null;
   }
 
   // Deletar sorteio
   async delete(id) {
-    const index = this.sorteios.findIndex(s => s.id === parseInt(id));
-    if (index === -1) return false;
-
-    this.sorteios.splice(index, 1);
-    return true;
+    const result = await pool.query('DELETE FROM sorteios WHERE id = $1', [id]);
+    return result.rowCount > 0;
   }
 }
 

@@ -1,93 +1,79 @@
-// Repository para gerenciar Apostas
+const { Pool } = require('pg');
+const dbConfig = require('../config/database');
+const pool = new Pool(dbConfig);
 
 class ApostaRepository {
-  constructor() {
-    this.apostas = [];
-    this.nextId = 1;
-  }
-
   // Criar uma nova aposta
   async create(apostaData) {
-    const aposta = {
-      id: this.nextId++,
-      ...apostaData,
-      valoresEscolhidos: apostaData.valoresEscolhidos || [],
-      valoresAcertados: apostaData.valoresAcertados || [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.apostas.push(aposta);
-    return aposta;
+    const { inscricao_bolao_id, valores_escolhidos } = apostaData;
+    const result = await pool.query(
+      `INSERT INTO apostas (inscricao_bolao_id, valores_escolhidos, created_at, updated_at)
+       VALUES ($1, $2, NOW(), NOW()) RETURNING *`,
+      [inscricao_bolao_id, valores_escolhidos || []]
+    );
+    return result.rows[0];
   }
 
   // Buscar todas as apostas
   async findAll() {
-    return this.apostas;
+    const result = await pool.query('SELECT * FROM apostas');
+    return result.rows;
   }
 
   // Buscar aposta por ID
   async findById(id) {
-    return this.apostas.find(a => a.id === parseInt(id));
+    const result = await pool.query('SELECT * FROM apostas WHERE id = $1', [id]);
+    return result.rows[0] || null;
   }
 
   // Buscar apostas por inscrição
   async findByInscricao(inscricaoId) {
-    return this.apostas.filter(a => {
-      if (!a.inscricaoBolao) return false;
-      const inscricaoDaAposta = typeof a.inscricaoBolao === 'object' ? a.inscricaoBolao.id : a.inscricaoBolao;
-      return inscricaoDaAposta === parseInt(inscricaoId);
-    });
+    const result = await pool.query('SELECT * FROM apostas WHERE inscricao_bolao_id = $1', [inscricaoId]);
+    return result.rows;
   }
 
   // Buscar aposta específica de inscrição
   async findByInscricaoSingle(inscricaoId) {
-    return this.apostas.find(a => {
-      if (!a.inscricaoBolao) return false;
-      const inscricaoDaAposta = typeof a.inscricaoBolao === 'object' ? a.inscricaoBolao.id : a.inscricaoBolao;
-      return inscricaoDaAposta === parseInt(inscricaoId);
-    });
+    const result = await pool.query('SELECT * FROM apostas WHERE inscricao_bolao_id = $1', [inscricaoId]);
+    return result.rows[0] || null;
   }
 
   // Atualizar aposta
   async update(id, apostaData) {
-    const index = this.apostas.findIndex(a => a.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.apostas[index] = {
-      ...this.apostas[index],
-      ...apostaData,
-      updatedAt: new Date()
-    };
-    return this.apostas[index];
+    const { valores_escolhidos } = apostaData;
+    const result = await pool.query(
+      `UPDATE apostas SET valores_escolhidos = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [valores_escolhidos || [], id]
+    );
+    return result.rows[0] || null;
   }
 
-  // Atualizar valores acertados
   async updateValoresAcertados(id, valoresAcertados) {
-    const index = this.apostas.findIndex(a => a.id === parseInt(id));
-    if (index === -1) return null;
+    const result = await pool.query(
+      `UPDATE apostas SET valores_acertados = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [valoresAcertados || [], id]
+    );
+    return result.rows[0] || null;
+  }
 
-    this.apostas[index].valoresAcertados = valoresAcertados;
-    this.apostas[index].updatedAt = new Date();
-    return this.apostas[index];
+  async updatePontuacao(id, novaPontuacao) {
+    const result = await pool.query(
+      `UPDATE apostas SET pontuacao = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [novaPontuacao || 0, id]
+    );
+    return result.rows[0] || null;
   }
 
   // Deletar aposta
   async delete(id) {
-    const index = this.apostas.findIndex(a => a.id === parseInt(id));
-    if (index === -1) return false;
-
-    this.apostas.splice(index, 1);
-    return true;
+    const result = await pool.query('DELETE FROM apostas WHERE id = $1', [id]);
+    return result.rowCount > 0;
   }
 
   // Deletar todas as apostas de uma inscrição
   async deleteByInscricao(inscricaoId) {
-    this.apostas = this.apostas.filter(a => {
-      if (!a.inscricaoBolao) return true;
-      const inscricaoDaAposta = typeof a.inscricaoBolao === 'object' ? a.inscricaoBolao.id : a.inscricaoBolao;
-      return inscricaoDaAposta !== parseInt(inscricaoId);
-    });
-    return true;
+    const result = await pool.query('DELETE FROM apostas WHERE inscricao_bolao_id = $1', [inscricaoId]);
+    return result.rowCount > 0;
   }
 }
 

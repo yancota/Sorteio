@@ -56,12 +56,12 @@ class InscricaoBolao {
       id: this.id,
       bolao: this.bolao ? {
         id: this.bolao.id,
-        nome: this.bolao.nome
-      } : null,
+        nome: this.bolao.nome || 'Desconhecido'
+      } : { id: null, nome: 'Desconhecido' },
       usuario: this.usuario ? {
         id: this.usuario.id,
-        nome: this.usuario.nome
-      } : null,
+        nome: this.usuario.nome || 'Desconhecido'
+      } : { id: null, nome: 'Desconhecido' },
       apto: this.apto,
       pontuacaoTotal: this.pontuacaoTotal
     };

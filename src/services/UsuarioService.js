@@ -10,21 +10,24 @@ class UsuarioService {
       throw new Error('Nome e telefone são obrigatórios');
     }
 
-    // Verificar se telefone já existe
+    const grupo_id = usuarioData.grupo_id || usuarioData.grupo?.id;
+
     const usuarioExistente = await UsuarioRepository.findByTelefone(usuarioData.telefone);
     if (usuarioExistente) {
       throw new Error('Telefone já cadastrado');
     }
 
-    return await UsuarioRepository.create(usuarioData);
+    return await UsuarioRepository.create({
+      nome: usuarioData.nome,
+      telefone: usuarioData.telefone,
+      grupo_id
+    });
   }
 
-  // Buscar todos os usuários
   async getAll() {
     return await UsuarioRepository.findAll();
   }
 
-  // Buscar usuário por ID
   async getById(id) {
     const usuario = await UsuarioRepository.findById(id);
     if (!usuario) {
@@ -33,7 +36,6 @@ class UsuarioService {
     return usuario;
   }
 
-  // Buscar usuários por grupo
   async getByGrupo(grupoId) {
     return await UsuarioRepository.findByGrupo(grupoId);
   }

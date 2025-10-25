@@ -40,17 +40,17 @@ END $$;
 CREATE TABLE IF NOT EXISTS boloes (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
+  valor DECIMAL(10,2) NOT NULL,
   quantidade_campeao INTEGER NOT NULL,
   reiniciar_bolao BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabela de Sorteios (agora vinculados diretamente ao bolão)
+-- Tabela de Sorteios (agora vinculados diretamente ao bolão, SEM valor)
 CREATE TABLE IF NOT EXISTS sorteios (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
-  valor DECIMAL(10,2) NOT NULL,
   bolao_id INTEGER REFERENCES boloes(id) ON DELETE CASCADE,
   valores_sorteados TEXT[],
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS apostas (
   inscricao_bolao_id INTEGER REFERENCES inscricoes_bolao(id) ON DELETE CASCADE,
   valores_escolhidos TEXT[] NOT NULL,
   valores_acertados TEXT[],
+  pontuacao INTEGER DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(inscricao_bolao_id)

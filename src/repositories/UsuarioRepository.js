@@ -1,68 +1,58 @@
-// Repository para gerenciar dados de Usuários
-// Por enquanto, usando armazenamento em memória. Pode ser substituído por banco de dados.
+
+const { Pool } = require('pg');
+const dbConfig = require('../config/database');
+const pool = new Pool(dbConfig);
 
 class UsuarioRepository {
-  constructor() {
-    this.usuarios = [];
-    this.nextId = 1;
-  }
-
   // Criar um novo usuário
   async create(usuarioData) {
-    const usuario = {
-      id: this.nextId++,
-      ...usuarioData,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.usuarios.push(usuario);
-    return usuario;
+    const { nome, telefone, grupo_id } = usuarioData;
+    const result = await pool.query(
+      `INSERT INTO usuarios (nome, telefone, grupo_id, created_at, updated_at)
+       VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *`,
+      [nome, telefone, grupo_id || null]
+    );
+    return result.rows[0];
   }
 
   // Buscar todos os usuários
   async findAll() {
-    return this.usuarios;
+    const result = await pool.query('SELECT * FROM usuarios');
+    return result.rows;
   }
 
   // Buscar usuário por ID
   async findById(id) {
-    return this.usuarios.find(u => u.id === parseInt(id));
+    const result = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+    return result.rows[0] || null;
   }
 
   // Buscar usuário por telefone
   async findByTelefone(telefone) {
-    return this.usuarios.find(u => u.telefone === telefone);
+    const result = await pool.query('SELECT * FROM usuarios WHERE telefone = $1', [telefone]);
+    return result.rows[0] || null;
   }
 
   // Buscar usuários por grupo
   async findByGrupo(grupoId) {
-    return this.usuarios.filter(u => {
-      if (!u.grupo) return false;
-      const grupoDoUsuario = typeof u.grupo === 'object' ? u.grupo.id : u.grupo;
-      return grupoDoUsuario === parseInt(grupoId);
-    });
+    const result = await pool.query('SELECT * FROM usuarios WHERE grupo_id = $1', [grupoId]);
+    return result.rows;
   }
 
   // Atualizar usuário
   async update(id, usuarioData) {
-    const index = this.usuarios.findIndex(u => u.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.usuarios[index] = {
-      ...this.usuarios[index],
-      ...usuarioData,
-      updatedAt: new Date()
-    };
-    return this.usuarios[index];
+    const { nome, telefone, grupo_id } = usuarioData;
+    const result = await pool.query(
+      `UPDATE usuarios SET nome = $1, telefone = $2, grupo_id = $3, updated_at = NOW() WHERE id = $4 RETURNING *`,
+      [nome, telefone, grupo_id || null, id]
+    );
+    return result.rows[0] || null;
   }
 
   // Deletar usuário
   async delete(id) {
-    const index = this.usuarios.findIndex(u => u.id === parseInt(id));
-    if (index === -1) return false;
-
-    this.usuarios.splice(index, 1);
-    return true;
+    const result = await pool.query('DELETE FROM usuarios WHERE id = $1', [id]);
+    return result.rowCount > 0;
   }
 }
 

@@ -1,65 +1,57 @@
-// Repository para gerenciar dados de Grupos
+const { Pool } = require('pg');
+const dbConfig = require('../config/database');
+const pool = new Pool(dbConfig);
 
 class GrupoRepository {
-  constructor() {
-    this.grupos = [];
-    this.nextId = 1;
-  }
-
   // Criar um novo grupo
   async create(grupoData) {
-    const grupo = {
-      id: this.nextId++,
-      ...grupoData,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.grupos.push(grupo);
-    return grupo;
+    const { nome, usuario_responsavel_id } = grupoData;
+    const result = await pool.query(
+      `INSERT INTO grupos (nome, usuario_responsavel_id, created_at, updated_at)
+       VALUES ($1, $2, NOW(), NOW()) RETURNING *`,
+      [nome, usuario_responsavel_id || null]
+    );
+    return result.rows[0];
   }
 
   // Buscar todos os grupos
   async findAll() {
-    return this.grupos;
+    const result = await pool.query('SELECT * FROM grupos');
+    return result.rows;
   }
 
   // Buscar grupo por ID
   async findById(id) {
-    return this.grupos.find(g => g.id === parseInt(id));
+    const result = await pool.query('SELECT * FROM grupos WHERE id = $1', [id]);
+    return result.rows[0] || null;
   }
 
   // Buscar grupos por usuário responsável
   async findByUsuarioResponsavel(usuarioId) {
-    return this.grupos.filter(g => 
-      g.usuarioResponsavel && g.usuarioResponsavel.id === parseInt(usuarioId)
-    );
+    const result = await pool.query('SELECT * FROM grupos WHERE usuario_responsavel_id = $1', [usuarioId]);
+    return result.rows;
   }
 
   // Buscar grupo por nome
   async findByNome(nome) {
-    return this.grupos.find(g => g.nome.toLowerCase() === nome.toLowerCase());
+    const result = await pool.query('SELECT * FROM grupos WHERE LOWER(nome) = $1', [nome.toLowerCase()]);
+    return result.rows[0] || null;
   }
 
   // Atualizar grupo
   async update(id, grupoData) {
-    const index = this.grupos.findIndex(g => g.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.grupos[index] = {
-      ...this.grupos[index],
-      ...grupoData,
-      updatedAt: new Date()
-    };
-    return this.grupos[index];
+    const { nome, usuario_responsavel_id } = grupoData;
+    const result = await pool.query(
+      `UPDATE grupos SET nome = $1, usuario_responsavel_id = $2, updated_at = NOW() WHERE id = $3 RETURNING *`,
+      [nome, usuario_responsavel_id || null, id]
+    );
+    return result.rows[0] || null;
   }
 
   // Deletar grupo
   async delete(id) {
-    const index = this.grupos.findIndex(g => g.id === parseInt(id));
-    if (index === -1) return false;
-
-    this.grupos.splice(index, 1);
-    return true;
+    const result = await pool.query('DELETE FROM grupos WHERE id = $1', [id]);
+    return result.rowCount > 0;
   }
 }
 

@@ -93,11 +93,6 @@ const options = {
               type: 'string',
               description: 'Nome do sorteio'
             },
-            valor: {
-              type: 'number',
-              format: 'double',
-              description: 'Valor do sorteio'
-            },
             bolao: {
               type: 'integer',
               description: 'ID do bolão ao qual o sorteio pertence'
@@ -121,6 +116,11 @@ const options = {
             nome: {
               type: 'string',
               description: 'Nome do bolão'
+            },
+            valor: {
+              type: 'number',
+              format: 'double',
+              description: 'Valor do bolão'
             },
             quantidadeCampeao: {
               type: 'integer',
@@ -178,13 +178,6 @@ const options = {
                 type: 'string'
               },
               description: 'Valores escolhidos (valem para todos os sorteios do bolão)'
-            },
-            valoresAcertados: {
-              type: 'array',
-              items: {
-                type: 'string'
-              },
-              description: 'Valores que o usuário acertou'
             }
           }
         },

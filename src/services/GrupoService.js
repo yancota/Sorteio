@@ -10,12 +10,13 @@ class GrupoService {
       throw new Error('Nome do grupo é obrigatório');
     }
 
-    if (!grupoData.usuarioResponsavel || !grupoData.usuarioResponsavel.id) {
+    const usuario_responsavel_id = grupoData.usuario_responsavel_id || grupoData.usuarioResponsavel?.id;
+    if (!usuario_responsavel_id) {
       throw new Error('Usuário responsável é obrigatório');
     }
 
     // Verificar se usuário responsável existe
-    const usuario = await UsuarioRepository.findById(grupoData.usuarioResponsavel.id);
+    const usuario = await UsuarioRepository.findById(usuario_responsavel_id);
     if (!usuario) {
       throw new Error('Usuário responsável não encontrado');
     }
@@ -26,7 +27,10 @@ class GrupoService {
       throw new Error('Já existe um grupo com este nome');
     }
 
-    return await GrupoRepository.create(grupoData);
+    return await GrupoRepository.create({
+      nome: grupoData.nome,
+      usuario_responsavel_id
+    });
   }
 
   // Buscar todos os grupos

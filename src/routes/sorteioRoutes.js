@@ -17,15 +17,15 @@ const SorteioController = require('../controllers/SorteioController');
  *             type: object
  *             required:
  *               - nome
- *               - valor
+ *               - bolao
  *             properties:
  *               nome:
  *                 type: string
  *                 example: Mega Sena - Concurso 2500
- *               valor:
- *                 type: number
- *                 format: double
- *                 example: 5.00
+ *               bolao:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID do bolão
  *               valoresSorteados:
  *                 type: array
  *                 items:
@@ -164,7 +164,8 @@ router.put('/:id', SorteioController.update);
  * @swagger
  * /api/sorteios/{id}/realizar:
  *   post:
- *     summary: Realizar sorteio (definir números sorteados)
+ *     summary: Realizar sorteio (calcula acertos e atualiza pontuações automaticamente)
+ *     description: Processa o sorteio usando os valores já cadastrados. Calcula os acertos de todas as apostas e atualiza a pontuação dos participantes automaticamente.
  *     tags: [Sorteios]
  *     parameters:
  *       - in: path
@@ -173,25 +174,11 @@ router.put('/:id', SorteioController.update);
  *         schema:
  *           type: integer
  *         description: ID do sorteio
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - valoresSorteados
- *             properties:
- *               valoresSorteados:
- *                 type: array
- *                 items:
- *                   type: string
- *                 example: ["10", "25", "33", "42", "51", "60"]
  *     responses:
  *       200:
- *         description: Sorteio realizado com sucesso
+ *         description: Sorteio realizado com sucesso. Acertos calculados e pontuações atualizadas.
  *       400:
- *         description: Erro na validação
+ *         description: Erro - Sorteio precisa ter valores sorteados definidos
  *       404:
  *         description: Sorteio não encontrado
  */

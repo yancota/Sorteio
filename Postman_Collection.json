@@ -1,9 +1,9 @@
 {
   "info": {
     "name": "Sistema de Sorteio - API",
-    "description": "Collection completa da API de Bolões e Sorteios",
+    "description": "Collection completa da API de Bolões e Sorteios (atualizada para envio de IDs nos relacionamentos)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "variable": [
     {

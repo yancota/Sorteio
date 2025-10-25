@@ -150,7 +150,8 @@ router.get('/bolao/:bolaoId/aptas', InscricaoBolaoController.getAptasByBolao);
  * @swagger
  * /api/inscricoes/bolao/{bolaoId}/ranking:
  *   get:
- *     summary: Obter ranking do bolão (ordenado por pontuação)
+ *     summary: Obter ranking completo do bolão
+ *     description: Retorna informações otimizadas do bolão incluindo participantes com valores escolhidos, pontuação e posição no ranking
  *     tags: [Inscrições]
  *     parameters:
  *       - in: path
@@ -161,7 +162,7 @@ router.get('/bolao/:bolaoId/aptas', InscricaoBolaoController.getAptasByBolao);
  *         description: ID do bolão
  *     responses:
  *       200:
- *         description: Ranking do bolão
+ *         description: Ranking completo do bolão
  *         content:
  *           application/json:
  *             schema:
@@ -169,10 +170,54 @@ router.get('/bolao/:bolaoId/aptas', InscricaoBolaoController.getAptasByBolao);
  *               properties:
  *                 success:
  *                   type: boolean
+ *                   example: true
  *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/InscricaoBolao'
+ *                   type: object
+ *                   properties:
+ *                     bolao:
+ *                       type: string
+ *                       description: Nome do bolão
+ *                       example: "Bolão da Copa 2026"
+ *                     participantes:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           nome:
+ *                             type: string
+ *                             description: Nome do participante
+ *                             example: "João Silva"
+ *                           valoresEscolhidos:
+ *                             type: array
+ *                             items:
+ *                               type: string
+ *                             description: Números escolhidos pelo participante
+ *                             example: ["7", "14", "21", "28", "35", "42", "49", "56", "63", "70"]
+ *                           pontuacaoTotal:
+ *                             type: integer
+ *                             description: Pontuação total acumulada
+ *                             example: 150
+ *                           posicao:
+ *                             type: integer
+ *                             description: Posição no ranking
+ *                             example: 1
+ *                     sorteios:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           nome:
+ *                             type: string
+ *                             description: Nome do sorteio
+ *                             example: "Sorteio 1"
+ *                           valoresSorteados:
+ *                             type: array
+ *                             items:
+ *                               type: string
+ *                             description: Números sorteados
+ *                             example: ["7", "14", "21", "28", "35"]
+ *       404:
+ *         description: Bolão não encontrado
  */
 router.get('/bolao/:bolaoId/ranking', InscricaoBolaoController.getRanking);
 

@@ -1,110 +1,96 @@
-// Repository para gerenciar Inscrições em Bolões
+const { Pool } = require('pg');
+const dbConfig = require('../config/database');
+const pool = new Pool(dbConfig);
 
 class InscricaoBolaoRepository {
-  constructor() {
-    this.inscricoes = [];
-    this.nextId = 1;
-  }
-
   // Criar uma nova inscrição
   async create(inscricaoData) {
-    const inscricao = {
-      id: this.nextId++,
-      ...inscricaoData,
-      pontuacaoTotal: inscricaoData.pontuacaoTotal || 0,
-      apto: inscricaoData.apto !== undefined ? inscricaoData.apto : true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.inscricoes.push(inscricao);
-    return inscricao;
+    const { bolao_id, usuario_id, apto, pontuacao_total } = inscricaoData;
+    const result = await pool.query(
+      `INSERT INTO inscricoes_bolao (bolao_id, usuario_id, apto, pontuacao_total, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *`,
+      [bolao_id, usuario_id, apto !== undefined ? apto : true, pontuacao_total || 0]
+    );
+    return result.rows[0];
   }
 
   // Buscar todas as inscrições
   async findAll() {
-    return this.inscricoes;
+    const result = await pool.query('SELECT * FROM inscricoes_bolao');
+    return result.rows;
   }
 
   // Buscar inscrição por ID
   async findById(id) {
-    return this.inscricoes.find(i => i.id === parseInt(id));
+    const result = await pool.query('SELECT * FROM inscricoes_bolao WHERE id = $1', [id]);
+    return result.rows[0] || null;
   }
 
   // Buscar inscrições por bolão
   async findByBolao(bolaoId) {
-    return this.inscricoes.filter(i => 
-      i.bolao && i.bolao.id === parseInt(bolaoId)
-    );
+    const result = await pool.query('SELECT * FROM inscricoes_bolao WHERE bolao_id = $1', [bolaoId]);
+    return result.rows;
   }
 
   // Buscar inscrições por usuário
   async findByUsuario(usuarioId) {
-    return this.inscricoes.filter(i => 
-      i.usuario && i.usuario.id === parseInt(usuarioId)
-    );
+    const result = await pool.query('SELECT * FROM inscricoes_bolao WHERE usuario_id = $1', [usuarioId]);
+    return result.rows;
   }
 
   // Buscar inscrição específica de usuário em bolão
   async findByUsuarioAndBolao(usuarioId, bolaoId) {
-    return this.inscricoes.find(i => 
-      i.usuario && i.usuario.id === parseInt(usuarioId) &&
-      i.bolao && i.bolao.id === parseInt(bolaoId)
-    );
+    const result = await pool.query('SELECT * FROM inscricoes_bolao WHERE usuario_id = $1 AND bolao_id = $2', [usuarioId, bolaoId]);
+    return result.rows[0] || null;
   }
 
   // Buscar inscrições aptas em um bolão
   async findAptasByBolao(bolaoId) {
-    return this.inscricoes.filter(i => 
-      i.bolao && i.bolao.id === parseInt(bolaoId) && i.apto === true
-    );
+    const result = await pool.query('SELECT * FROM inscricoes_bolao WHERE bolao_id = $1 AND apto = true', [bolaoId]);
+    return result.rows;
   }
 
   // Obter ranking de um bolão (ordenado por pontuação)
   async getRankingByBolao(bolaoId) {
-    const inscricoes = await this.findByBolao(bolaoId);
-    return inscricoes.sort((a, b) => b.pontuacaoTotal - a.pontuacaoTotal);
+    const result = await pool.query('SELECT * FROM inscricoes_bolao WHERE bolao_id = $1 ORDER BY pontuacao_total DESC', [bolaoId]);
+    return result.rows;
   }
 
   // Atualizar inscrição
   async update(id, inscricaoData) {
-    const index = this.inscricoes.findIndex(i => i.id === parseInt(id));
-    if (index === -1) return null;
-
-    this.inscricoes[index] = {
-      ...this.inscricoes[index],
-      ...inscricaoData,
-      updatedAt: new Date()
-    };
-    return this.inscricoes[index];
+    const { apto, pontuacao_total } = inscricaoData;
+    const result = await pool.query(
+      `UPDATE inscricoes_bolao SET apto = $1, pontuacao_total = $2, updated_at = NOW() WHERE id = $3 RETURNING *`,
+      [apto !== undefined ? apto : true, pontuacao_total || 0, id]
+    );
+    return result.rows[0] || null;
   }
 
   // Atualizar pontuação
   async updatePontuacao(id, pontos) {
     const inscricao = await this.findById(id);
     if (!inscricao) return null;
-
-    inscricao.pontuacaoTotal += pontos;
-    inscricao.updatedAt = new Date();
-    return inscricao;
+    const novaPontuacao = (inscricao.pontuacao_total || 0) + pontos;
+    const result = await pool.query(
+      `UPDATE inscricoes_bolao SET pontuacao_total = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+      [novaPontuacao, id]
+    );
+    return result.rows[0] || null;
   }
 
   // Resetar pontuação
   async resetPontuacao(id) {
-    const inscricao = await this.findById(id);
-    if (!inscricao) return null;
-
-    inscricao.pontuacaoTotal = 0;
-    inscricao.updatedAt = new Date();
-    return inscricao;
+    const result = await pool.query(
+      `UPDATE inscricoes_bolao SET pontuacao_total = 0, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id]
+    );
+    return result.rows[0] || null;
   }
 
   // Deletar inscrição
   async delete(id) {
-    const index = this.inscricoes.findIndex(i => i.id === parseInt(id));
-    if (index === -1) return false;
-
-    this.inscricoes.splice(index, 1);
-    return true;
+    const result = await pool.query('DELETE FROM inscricoes_bolao WHERE id = $1', [id]);
+    return result.rowCount > 0;
   }
 }
 

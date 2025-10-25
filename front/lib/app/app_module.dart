@@ -1,14 +1,16 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:sorteio_front/core/features/bolao/bolao_module.dart';
+import 'package:sorteio_front/core/pages/splash.dart';
 
 class AppModule extends Module {
   @override
-  void routes(RouteManager r) {
-    r.child(
-      '/',
-      child: (context) => const MyHomePage(title: 'Flutter Modular Home'),
-    );
-    // Adicione outras rotas aqui
+  void binds(i) {
+    // Adicione seus binds aqui, se necessário
+  }
+
+  @override
+  void routes(r) {
+    r.child('/', child: (context) => const SplashPage());
+    r.module('/bolao', module: BolaoModule());
   }
 }

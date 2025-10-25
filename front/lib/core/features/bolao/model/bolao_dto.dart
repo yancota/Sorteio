@@ -21,16 +21,20 @@ class BolaoDto {
 
   factory BolaoDto.fromJson(Map<String, dynamic> json) {
     return BolaoDto(
-      id: json['id'],
-      nome: json['nome'],
-      valor: json['valor'],
-      quantidadeCampeao: json['quantidade_campeao'],
-      reiniciarBolao: json['reiniciar_bolao'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      id: json['id'] as int? ?? 0,
+      nome: json['nome'] as String? ?? '',
+      valor: json['valor'] as String? ?? '0.00',
+      quantidadeCampeao: json['quantidade_campeao'] as int? ?? 0,
+      reiniciarBolao: json['reiniciar_bolao'] as bool? ?? false,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
       sorteios:
           (json['sorteios'] as List<dynamic>?)
-              ?.map((e) => SorteioDto.fromJson(e))
+              ?.map((e) => SorteioDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -56,16 +60,20 @@ class SorteioDto {
 
   factory SorteioDto.fromJson(Map<String, dynamic> json) {
     return SorteioDto(
-      id: json['id'],
-      nome: json['nome'],
-      bolaoId: json['bolao_id'],
+      id: json['id'] as int? ?? 0,
+      nome: json['nome'] as String? ?? '',
+      bolaoId: json['bolao_id'] as int? ?? 0,
       valoresSorteados:
           (json['valores_sorteados'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           [],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
     );
   }
 }

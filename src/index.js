@@ -1,6 +1,8 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // Importar rotas
 const routes = require('./routes');
@@ -9,11 +11,18 @@ const routes = require('./routes');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'API Sorteio - Documentação'
+}));
+
 // Rota raiz
 app.get('/', (req, res) => {
   res.json({ 
     message: 'API Sorteio - Sistema rodando!',
     version: '1.0.0',
+    documentation: '/api-docs',
     endpoints: {
       usuarios: '/api/usuarios',
       grupos: '/api/grupos',

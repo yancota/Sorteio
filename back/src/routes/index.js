@@ -9,6 +9,7 @@ const sorteioRoutes = require('./sorteioRoutes');
 const bolaoRoutes = require('./bolaoRoutes');
 const inscricaoBolaoRoutes = require('./inscricaoBolaoRoutes');
 const apostaRoutes = require('./apostaRoutes');
+const loginRoutes = require('./authRoute');
 
 // Configurar rotas
 router.use('/usuarios', usuarioRoutes);
@@ -17,5 +18,6 @@ router.use('/sorteios', sorteioRoutes);
 router.use('/boloes', bolaoRoutes);
 router.use('/inscricoes', inscricaoBolaoRoutes);
 router.use('/apostas', apostaRoutes);
+router.use('/auth', loginRoutes);
 
 module.exports = router;

@@ -2,7 +2,7 @@ import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
 import 'package:sorteio_front/core/services/api_service.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
 
-class VerificarValorServicoUtilsRepository {
+class BolaoService {
   //String get basicAuth => Constants.tokenKey;
   String get urlBase => Constants.baseUrl;
 

@@ -1,13 +1,24 @@
 import 'package:intl/intl.dart';
 import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
 import 'package:sorteio_front/core/features/bolao/services/bolao_service.dart';
+import 'package:sorteio_front/core/features/usuario/model/usuario_dto.dart';
+import 'package:sorteio_front/core/features/usuario/service/usuario_service.dart';
 
-class BolaoController {
-  final BolaoService _service = BolaoService();
+class CadastroUsuarioController {
+  final UsuarioService _service = UsuarioService();
 
-  Future<List<BolaoDto>> buscarBoloes() async {
+  Future<List<UsuarioDto>> buscarUsuarios() async {
     try {
-      final response = await _service.buscarBoloes();
+      final response = await _service.buscarUsuarios();
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UsuarioDto> cadastrarUsuario(String nome, String telefone) async {
+    try {
+      final response = await _service.cadastrarUsuario(nome, telefone);
       return response;
     } catch (e) {
       rethrow;

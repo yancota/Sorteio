@@ -8,6 +8,9 @@ services:
       POSTGRES_DB: db_bolao
       POSTGRES_USER: bolao_cota_admin
       POSTGRES_PASSWORD: root1234
+      ADMIN_USERNAME: cota@admin
+      ADMIN_PASSWORD: CotaBolao2025#
+      JWT_SECRET: GaloDoidoMatador2025!VenhaSula#
     ports:
       - "5432:5432"
     volumes:

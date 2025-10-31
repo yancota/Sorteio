@@ -1,4 +1,5 @@
 import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
+import 'package:sorteio_front/core/features/bolao/model/criar_aposta_dto.dart';
 import 'package:sorteio_front/core/features/bolao/model/ranking_bolao_dto.dart';
 import 'package:sorteio_front/core/services/api_service.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
@@ -14,7 +15,6 @@ class BolaoService {
       final apiService = ApiService(baseUrl: urlBase);
       final response = await apiService.get(endpoint);
 
-      // A resposta é {success: true, data: [...]}, então extraímos data
       final data = response['data'] as List<dynamic>? ?? [];
       return data
           .map((json) => BolaoDto.fromJson(json as Map<String, dynamic>))
@@ -59,6 +59,47 @@ class BolaoService {
       }
 
       return [];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<CriarApostaResponseDto> fazerAposta(
+    int inscricaoId,
+    List<String> valoresEscolhidos,
+  ) async {
+    String endpoint = '/apostas';
+
+    final body = {
+      'inscricaoBolao': {'id': inscricaoId},
+      'valores_escolhidos': valoresEscolhidos,
+    };
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final response = await apiService.post(endpoint, body: body);
+
+      return CriarApostaResponseDto.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Associa um usuário a um bolão (inscrição).
+  /// Retorna true se a operação tiver sucesso (campo `success` da API).
+  Future<bool> associarUsuarioAoBolao(
+    int bolaoId,
+    int usuarioId,
+    bool apto,
+  ) async {
+    String endpoint = '/inscricoes';
+
+    final body = {'bolao_id': bolaoId, 'usuario_id': usuarioId, 'apto': apto};
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final response = await apiService.post(endpoint, body: body);
+      return response['success'] as bool? ?? false;
     } catch (e) {
       rethrow;
     }

@@ -52,6 +52,8 @@ class RankingDataDto {
 }
 
 class ParticipanteDto {
+  final int usuarioId;
+  final int inscricaoId;
   final String nome;
   final List<String> valoresEscolhidos;
   final int pontuacaoTotal;
@@ -60,6 +62,8 @@ class ParticipanteDto {
   final bool apto;
 
   ParticipanteDto({
+    required this.usuarioId,
+    required this.inscricaoId,
     required this.nome,
     required this.valoresEscolhidos,
     required this.pontuacaoTotal,
@@ -70,6 +74,8 @@ class ParticipanteDto {
 
   factory ParticipanteDto.fromJson(Map<String, dynamic> json) {
     return ParticipanteDto(
+      usuarioId: json['usuarioId'] as int? ?? 0,
+      inscricaoId: json['inscricaoId'] as int? ?? 0,
       nome: json['nome'] as String? ?? '',
       valoresEscolhidos:
           (json['valoresEscolhidos'] as List<dynamic>?)
@@ -88,6 +94,8 @@ class ParticipanteDto {
   }
 
   Map<String, dynamic> toJson() => {
+    'usuarioId': usuarioId,
+    'inscricaoId': inscricaoId,
     'nome': nome,
     'valoresEscolhidos': valoresEscolhidos,
     'pontuacaoTotal': pontuacaoTotal,

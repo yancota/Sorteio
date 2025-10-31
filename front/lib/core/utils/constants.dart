@@ -35,4 +35,5 @@ class Constants {
   static const Color backgroundLight = Color(0xFFF3EFEA);
   static const Color textLight = Color(0xFF4F4F4F);
   static const Color textPrimary = Color(0xFF0F1720);
+  static const Color lightGray = Color(0xFFD9D9D9);
 }

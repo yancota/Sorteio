@@ -133,6 +133,7 @@ class InscricaoBolaoService {
       }
 
       participantes.push({
+        usuarioId: usuarioId,
         inscricaoId: inscricao.id,
         nome: nomeUsuario,
         valoresEscolhidos: aposta.valores_escolhidos ? aposta.valores_escolhidos : [],

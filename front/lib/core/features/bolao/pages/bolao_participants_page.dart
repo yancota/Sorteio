@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
+import 'package:sorteio_front/core/features/bolao/pages/participante_detail_page.dart';
+import 'package:sorteio_front/core/features/bolao/pages/associar_usuario_page.dart';
 import 'package:sorteio_front/core/features/bolao/controller/ranking_bolao_controller.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
 
@@ -125,71 +127,90 @@ class _BolaoParticipantsPageState extends State<BolaoParticipantsPage> {
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final p = list[index];
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Constants.primary.withOpacity(
-                                  0.12,
-                                ),
-                                child: Text(
-                                  _initials(p.nome),
-                                  style: TextStyle(
-                                    color: Constants.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => ParticipanteDetailPage(
+                                  id: p.posicao,
+                                  nome: p.nome,
+                                  valoresEscolhidos: p.valoresEscolhidos,
+                                  valoresAcertados: p.valoresAcertados,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      p.nome,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Constants.primary
+                                      .withOpacity(0.12),
+                                  child: Text(
+                                    _initials(p.nome),
+                                    style: TextStyle(
+                                      color: Constants.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        p.nome,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Pontuação: ${p.score}',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Column(
+                                  children: [
+                                    Icon(
+                                      p.apto
+                                          ? Icons.check_circle
+                                          : Icons.cancel,
+                                      color: p.apto ? Colors.green : Colors.red,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      'Pontuação: ${p.score}',
+                                      p.apto ? 'Apto' : 'Inapto',
                                       style: TextStyle(
-                                        color: Colors.grey.shade600,
+                                        color: p.apto
+                                            ? Colors.green
+                                            : Colors.red,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Column(
-                                children: [
-                                  Icon(
-                                    p.apto ? Icons.check_circle : Icons.cancel,
-                                    color: p.apto ? Colors.green : Colors.red,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    p.apto ? 'Apto' : 'Inapto',
-                                    style: TextStyle(
-                                      color: p.apto ? Colors.green : Colors.red,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -202,10 +223,20 @@ class _BolaoParticipantsPageState extends State<BolaoParticipantsPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: ação para adicionar participante
+        onPressed: () async {
+          // Abre a tela para associar usuário e, se retornar true, atualiza a lista
+          final result = await Navigator.of(context).push<bool?>(
+            MaterialPageRoute(
+              builder: (_) => AssociarUsuarioPage(bolao: bolao),
+            ),
+          );
+          if (result == true) {
+            // Recarrega participantes
+            _controller.refresh();
+          }
         },
         backgroundColor: Constants.primary,
+        foregroundColor: Colors.white,
         child: const Icon(Icons.person_add),
       ),
     );

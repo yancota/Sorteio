@@ -9,13 +9,27 @@ class Participant {
   final int score;
   final bool apto;
 
-  Participant({required this.nome, required this.score, required this.apto});
+  final List<String> valoresEscolhidos;
+  final List<String> valoresAcertados;
+  final int posicao;
+
+  Participant({
+    required this.nome,
+    required this.score,
+    required this.apto,
+    required this.valoresEscolhidos,
+    required this.valoresAcertados,
+    required this.posicao,
+  });
 
   factory Participant.fromDto(ParticipanteDto dto) {
     return Participant(
       nome: dto.nome,
       score: dto.pontuacaoTotal,
-      apto: dto.apto,
+      apto: dto.valoresAcertados.isNotEmpty,
+      valoresEscolhidos: dto.valoresEscolhidos,
+      valoresAcertados: dto.valoresAcertados,
+      posicao: dto.posicao,
     );
   }
 }

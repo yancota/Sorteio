@@ -12,6 +12,8 @@ class RankingBolaoDTO {
 
     // Participantes otimizados - apenas dados essenciais
     const participantesOtimizados = participantes.map(p => ({
+      usuarioId: p.usuarioId,
+      inscricaoId: p.inscricaoId,
       nome: (p.usuario && p.usuario.nome) ? p.usuario.nome : (p.nome || 'Desconhecido'),
       valoresEscolhidos: p.valoresEscolhidos,
       pontuacaoTotal: p.pontuacaoTotal,

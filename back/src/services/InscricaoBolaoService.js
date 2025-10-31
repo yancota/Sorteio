@@ -136,18 +136,29 @@ class InscricaoBolaoService {
         inscricaoId: inscricao.id,
         nome: nomeUsuario,
         valoresEscolhidos: aposta.valores_escolhidos ? aposta.valores_escolhidos : [],
-        pontuacaoTotal: inscricao.pontuacao_total || 0,
+        pontuacaoTotal: aposta.pontuacao || 0,
         posicao: 0,
-        valoresAcertados: aposta.valores_acertados ? aposta.valores_acertados : []
+        valoresAcertados: aposta.valores_acertados ? aposta.valores_acertados : [],
+        apto: inscricao.apto
       });
     }
 
     // Ordenar por pontuação (ranking)
     participantes.sort((a, b) => b.pontuacaoTotal - a.pontuacaoTotal);
 
-    // Adicionar posição no ranking
+    let posicao = 1;
+    let pontosAnterior = null;
+    let posicaoAnterior = 1;
+
     participantes.forEach((participante, index) => {
-      participante.posicao = index + 1;
+      if (pontosAnterior !== null && participante.pontuacaoTotal === pontosAnterior) {
+        participante.posicao = posicaoAnterior;
+      } else {
+        participante.posicao = posicao;
+        posicaoAnterior = posicao;
+      }
+      pontosAnterior = participante.pontuacaoTotal;
+      posicao++;
     });
 
     // Ajustar sorteios para DTO

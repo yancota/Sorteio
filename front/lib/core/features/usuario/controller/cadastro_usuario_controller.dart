@@ -1,6 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
-import 'package:sorteio_front/core/features/bolao/services/bolao_service.dart';
 import 'package:sorteio_front/core/features/usuario/model/usuario_dto.dart';
 import 'package:sorteio_front/core/features/usuario/service/usuario_service.dart';
 

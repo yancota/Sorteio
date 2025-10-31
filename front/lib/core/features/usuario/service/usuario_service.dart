@@ -3,14 +3,15 @@ import 'package:sorteio_front/core/services/api_service.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
 
 class UsuarioService {
-  String get urlBase => Constants.baseUrl;
+  String get urlBase => Constants().baseUrl;
 
   Future<List<UsuarioDto>> buscarUsuarios() async {
     String endpoint = '/usuarios';
 
     try {
       final apiService = ApiService(baseUrl: urlBase);
-      final response = await apiService.get(endpoint);
+      final response = await apiService.get(endpoint, 
+      headers: {'Authorization': 'Bearer ${Constants.token}'});
 
       final data = response['data'] as List<dynamic>? ?? [];
       return data
@@ -30,7 +31,7 @@ class UsuarioService {
       final response = await apiService.post(
         endpoint,
         body: {'nome': nome, 'telefone': telefone},
-      );
+        headers: {'Authorization': 'Bearer ${Constants.token}'});
 
       final data = response['data'];
 

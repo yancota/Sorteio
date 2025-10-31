@@ -35,7 +35,7 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     _animationController.forward();
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      Modular.to.navigate('/bolao/');
+      Modular.to.navigate('/login/');
     }
   }
 

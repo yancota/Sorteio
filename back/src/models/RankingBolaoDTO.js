@@ -16,7 +16,8 @@ class RankingBolaoDTO {
       valoresEscolhidos: p.valoresEscolhidos,
       pontuacaoTotal: p.pontuacaoTotal,
       posicao: p.posicao,
-      valoresAcertados: p.valoresAcertados || []
+      valoresAcertados: p.valoresAcertados || [],
+      apto: p.apto
     }));
 
     // Sorteios com apenas dados essenciais

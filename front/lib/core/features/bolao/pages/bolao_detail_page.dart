@@ -78,7 +78,7 @@ class BolaoDetailPage extends StatelessWidget {
                   title: 'Sorteios',
                   subtitle: 'Acompanhe os resultados',
                   onTap: () {
-                    // TODO: navegar para tela de sorteios
+                    Modular.to.pushNamed('/bolao/sorteios', arguments: bolao);
                   },
                 ),
 

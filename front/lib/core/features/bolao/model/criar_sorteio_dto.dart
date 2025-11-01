@@ -1,4 +1,6 @@
 // DTO para resposta de criação de sorteio
+import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
+
 class CriarSorteioResponseDto {
   final bool success;
   final String? message;

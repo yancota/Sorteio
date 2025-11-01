@@ -4,10 +4,10 @@ import 'package:sorteio_front/core/features/bolao/controller/sorteio/criar_sorte
 import 'package:sorteio_front/core/utils/constants.dart';
 
 class CriarSorteioPage extends StatefulWidget {
-  final int? inscricaoId;
+  final int? bolaoId;
   final List<String>? valoresEscolhidos;
 
-  const CriarSorteioPage({Key? key, this.inscricaoId, this.valoresEscolhidos})
+  const CriarSorteioPage({Key? key, this.bolaoId, this.valoresEscolhidos})
     : super(key: key);
 
   @override
@@ -17,11 +17,12 @@ class CriarSorteioPage extends StatefulWidget {
 class _CriarSorteioPageState extends State<CriarSorteioPage> {
   final controller = CriarSorteioController();
   final TextEditingController _inputController = TextEditingController();
+  final TextEditingController _nomeController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    controller.init(widget.inscricaoId);
+    controller.init(widget.bolaoId);
     if (widget.valoresEscolhidos != null)
       controller.valoresEscolhidos = List.from(widget.valoresEscolhidos!);
   }
@@ -29,16 +30,23 @@ class _CriarSorteioPageState extends State<CriarSorteioPage> {
   @override
   void dispose() {
     _inputController.dispose();
+    _nomeController.dispose();
     controller.dispose();
     super.dispose();
   }
 
   Future<void> _confirm() async {
+    if (controller.nome.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Informe um nome para o sorteio')),
+      );
+      return;
+    }
     try {
-      final ok = await controller.fazerAposta();
+      final ok = await controller.criarSorteio();
       if (ok) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Aposta criada com sucesso')),
+          const SnackBar(content: Text('Sorteio criado com sucesso')),
         );
         Modular.to.pop(true);
       } else {
@@ -56,7 +64,7 @@ class _CriarSorteioPageState extends State<CriarSorteioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Fazer Aposta'), centerTitle: true),
+      appBar: AppBar(title: const Text('Criar Sorteio'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: AnimatedBuilder(
@@ -65,6 +73,35 @@ class _CriarSorteioPageState extends State<CriarSorteioPage> {
             final valores = controller.valoresEscolhidos;
             return Column(
               children: [
+                const SizedBox(height: 12),
+                // Nome do sorteio (caixa estilizada)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.02),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: _nomeController,
+                    decoration: const InputDecoration(
+                      hintText:
+                          'Nome do sorteio (ex: Mega Sena - Concurso 2500)',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (v) => controller.nome = v,
+                  ),
+                ),
                 const SizedBox(height: 12),
                 // Input + botão Adicionar
                 Container(
@@ -106,7 +143,10 @@ class _CriarSorteioPageState extends State<CriarSorteioPage> {
                             vertical: 12,
                           ),
                         ),
-                        child: const Text('Adicionar', style: TextStyle(color: Colors.white),),
+                        child: const Text(
+                          'Adicionar',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -150,7 +190,10 @@ class _CriarSorteioPageState extends State<CriarSorteioPage> {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text('Confirmar Aposta', style: TextStyle(color: Colors.white),),
+                          : const Text(
+                              'Criar Sorteio',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
                   ),
                 ),

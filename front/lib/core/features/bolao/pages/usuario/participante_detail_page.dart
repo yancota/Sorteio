@@ -94,27 +94,7 @@ class ParticipanteDetailPage extends StatelessWidget {
                 ),
               ),
 
-            const SizedBox(height: 20),
-
-            // Destaque dos números acertados (se houver)
-            if (valoresAcertados.isNotEmpty) ...[
-              Text(
-                'Números acertados',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10,
-                runSpacing: 10,
-                children: valoresAcertados
-                    .map((v) => _numberChip(v, true, context))
-                    .toList(),
-              ),
-            ],
+           
           ],
         ),
       ),

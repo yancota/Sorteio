@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
 import 'package:sorteio_front/core/features/bolao/model/criar_aposta_dto.dart';
 import 'package:sorteio_front/core/features/bolao/model/criar_sorteio_dto.dart';
@@ -91,13 +92,9 @@ class BolaoService {
     String endpoint = '/inscricoes';
 
     final body = {
-      'bolao': {
-        'id': bolaoId
-      },
-      'usuario': {
-        'id': usuarioId
-      },
-      'apto': apto
+      'bolao': {'id': bolaoId},
+      'usuario': {'id': usuarioId},
+      'apto': apto,
     };
 
     try {
@@ -109,7 +106,7 @@ class BolaoService {
     }
   }
 
-    Future<CriarSorteioResponseDto> criarSorteio(
+  Future<CriarSorteioResponseDto> criarSorteio(
     int bolaoId,
     String nome,
     List<String> valoresSorteados,
@@ -132,8 +129,8 @@ class BolaoService {
     }
   }
 
-   Future<List<CriarSorteioResponseDto>> buscarSorteiosPorBolao(
-    int bolaoId
+  Future<List<CriarSorteioResponseDto>> buscarSorteiosPorBolao(
+    int bolaoId,
   ) async {
     String endpoint = '/sorteios/bolao/$bolaoId';
 
@@ -141,9 +138,44 @@ class BolaoService {
       final apiService = ApiService(baseUrl: urlBase);
       final response = await apiService.get(endpoint);
 
-      return (response['data'] as List<dynamic>? ?? [])
-          .map((json) => CriarSorteioResponseDto.fromJson(json as Map<String, dynamic>))
-          .toList();
+      final rawList = response['data'] as List<dynamic>? ?? [];
+      final List<CriarSorteioResponseDto> result = [];
+      for (final item in rawList) {
+        if (item is Map<String, dynamic>) {
+          // caso item seja diretamente o objeto do sorteio (id, nome, valores_sorteados...)
+          if (item.containsKey('id') && item.containsKey('nome')) {
+            result.add(
+              CriarSorteioResponseDto(
+                success: response['success'] as bool? ?? false,
+                message: response['message'] as String?,
+                data: CriarSorteioDto.fromJson(Map<String, dynamic>.from(item)),
+              ),
+            );
+            continue;
+          }
+          // caso item seja uma resposta envelopada
+          result.add(
+            CriarSorteioResponseDto.fromJson(Map<String, dynamic>.from(item)),
+          );
+        }
+      }
+      return result;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<CriarSorteioResponseDto> realizarSorteio(int sorteioId) async {
+    String endpoint = '/sorteios/$sorteioId/realizar';
+    debugPrint('Realizando sorteio: $sorteioId');
+    final body = {};
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final raw = await apiService.post(endpoint, body: body);
+
+      return CriarSorteioResponseDto.fromJson(raw);
+
     } catch (e) {
       rethrow;
     }

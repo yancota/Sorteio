@@ -4,8 +4,9 @@ import 'package:sorteio_front/core/features/bolao/services/bolao_service.dart';
 class CriarSorteioController extends ChangeNotifier {
   final BolaoService _service = BolaoService();
 
-  int? inscricaoId;
+  int? bolaoId;
   List<String> valoresEscolhidos = [];
+  String nome = '';
   bool isLoading = false;
   String? error;
 
@@ -50,26 +51,41 @@ class CriarSorteioController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> init(int? inscricaoId) async {
-    this.inscricaoId = inscricaoId;
+  Future<void> init(int? bolaoId) async {
+    this.bolaoId = bolaoId;
   }
 
-  Future<bool> fazerAposta() async {
+  Future<bool> criarSorteio() async {
     isLoading = true;
     error = null;
     notifyListeners();
 
     try {
-      final response = await _service.fazerAposta(
-        inscricaoId!,
+      final response = await _service.criarSorteio(
+        bolaoId!,
+        nome,
         valoresEscolhidos,
       );
 
-      return response.success;
+      if (response.success) {
+        try {
+          int sorteioId = response.data!.id;
+
+          final sorteio = await _service.realizarSorteio(sorteioId);
+          debugPrint('Sorteio realizado: ${sorteio.message}');
+          return sorteio.success;
+        } catch (e) {
+          error = e.toString();
+          return false;
+        }
+      }
+
+      error = response.message ?? 'Falha ao criar sorteio';
+      return false;
     } catch (e) {
       error = e.toString();
       notifyListeners();
-      rethrow;
+      return false;
     } finally {
       isLoading = false;
       notifyListeners();

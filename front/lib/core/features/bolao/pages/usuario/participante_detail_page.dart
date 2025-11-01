@@ -7,6 +7,7 @@ class ParticipanteDetailPage extends StatelessWidget {
   final String nome;
   final List<String> valoresEscolhidos;
   final List<String> valoresAcertados;
+  final int inscricaoId;
 
   const ParticipanteDetailPage({
     Key? key,
@@ -14,6 +15,7 @@ class ParticipanteDetailPage extends StatelessWidget {
     required this.nome,
     required this.valoresEscolhidos,
     required this.valoresAcertados,
+    required this.inscricaoId,
   }) : super(key: key);
 
   @override
@@ -31,13 +33,14 @@ class ParticipanteDetailPage extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               'Números escolhidos',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
 
             // Grid de números escolhidos
             if (valoresEscolhidos.isNotEmpty)
               Wrap(
+                alignment: WrapAlignment.center,
                 spacing: 12,
                 runSpacing: 12,
                 children: valoresEscolhidos.map((v) {
@@ -46,34 +49,49 @@ class ParticipanteDetailPage extends StatelessWidget {
                 }).toList(),
               )
             else
-              Column(
-                children: [
-                  const SizedBox(height: 8),
-                  const Icon(Icons.info_outline, size: 48, color: Colors.grey),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Este participante ainda não escolheu números.',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Ação para iniciar fluxo de aposta. Tentar usar rota Modular se existir.
-                      if (id != null) {
-                        // Se existir uma rota para aposta, descomente e ajuste a rota
-                        // Modular.to.pushNamed('/bolao/fazer_aposta', arguments: {'inscricaoId': id});
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Abrir fluxo de aposta (implementar rota)',
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text('Fazer aposta'),
-                  ),
-                ],
+              Center(
+                heightFactor: 3,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 8),
+                    const Icon(
+                      Icons.info_outline,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Este participante ainda não escolheu números.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (id != null) {
+                          Modular.to.pushNamed(
+                            '/bolao/fazer_aposta',
+                            arguments: {
+                              'inscricaoId': inscricaoId,
+                              'valoresEscolhidos': valoresEscolhidos,
+                            },
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Constants.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                      ),
+                      child: const Text('Fazer aposta'),
+                    ),
+                  ],
+                ),
               ),
 
             const SizedBox(height: 20),
@@ -83,12 +101,13 @@ class ParticipanteDetailPage extends StatelessWidget {
               Text(
                 'Números acertados',
                 style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 8),
               Wrap(
+                alignment: WrapAlignment.center,
                 spacing: 10,
                 runSpacing: 10,
                 children: valoresAcertados
@@ -108,6 +127,7 @@ class ParticipanteDetailPage extends StatelessWidget {
     return Container(
       width: 100,
       height: 100,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,
@@ -121,7 +141,6 @@ class ParticipanteDetailPage extends StatelessWidget {
               ]
             : null,
       ),
-      alignment: Alignment.center,
       child: Text(
         text,
         style: TextStyle(

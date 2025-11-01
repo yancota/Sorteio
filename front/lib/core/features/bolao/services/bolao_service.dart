@@ -1,5 +1,6 @@
 import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
 import 'package:sorteio_front/core/features/bolao/model/criar_aposta_dto.dart';
+import 'package:sorteio_front/core/features/bolao/model/criar_sorteio_dto.dart';
 import 'package:sorteio_front/core/features/bolao/model/ranking_bolao_dto.dart';
 import 'package:sorteio_front/core/services/api_service.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
@@ -34,8 +35,6 @@ class BolaoService {
       final raw = response['data'];
       if (raw == null) return [];
 
-      // Caso comum: backend retorna { success: true, data: { bolao: ..., participantes: [...] } }
-      // Aqui `raw` é o objeto `data`. Precisamos construir um RankingBolaoDto com esse objeto
       if (raw is Map<String, dynamic>) {
         final dataMap = Map<String, dynamic>.from(raw);
         final dto = RankingBolaoDto(
@@ -45,7 +44,6 @@ class BolaoService {
         return [dto];
       }
 
-      // Se por algum motivo o backend retornar uma lista de objetos `data`
       if (raw is List<dynamic>) {
         return raw.map((e) {
           if (e is Map<String, dynamic>) {
@@ -85,8 +83,6 @@ class BolaoService {
     }
   }
 
-  /// Associa um usuário a um bolão (inscrição).
-  /// Retorna true se a operação tiver sucesso (campo `success` da API).
   Future<bool> associarUsuarioAoBolao(
     int bolaoId,
     int usuarioId,
@@ -94,12 +90,60 @@ class BolaoService {
   ) async {
     String endpoint = '/inscricoes';
 
-    final body = {'bolao_id': bolaoId, 'usuario_id': usuarioId, 'apto': apto};
+    final body = {
+      'bolao': {
+        'id': bolaoId
+      },
+      'usuario': {
+        'id': usuarioId
+      },
+      'apto': apto
+    };
 
     try {
       final apiService = ApiService(baseUrl: urlBase);
       final response = await apiService.post(endpoint, body: body);
       return response['success'] as bool? ?? false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+    Future<CriarSorteioResponseDto> criarSorteio(
+    int bolaoId,
+    String nome,
+    List<String> valoresSorteados,
+  ) async {
+    String endpoint = '/sorteios';
+
+    final body = {
+      'nome': nome,
+      'bolao': {'id': bolaoId},
+      'valores_sorteados': valoresSorteados,
+    };
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final response = await apiService.post(endpoint, body: body);
+
+      return CriarSorteioResponseDto.fromJson(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+   Future<List<CriarSorteioResponseDto>> buscarSorteiosPorBolao(
+    int bolaoId
+  ) async {
+    String endpoint = '/sorteios/bolao/$bolaoId';
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final response = await apiService.get(endpoint);
+
+      return (response['data'] as List<dynamic>? ?? [])
+          .map((json) => CriarSorteioResponseDto.fromJson(json as Map<String, dynamic>))
+          .toList();
     } catch (e) {
       rethrow;
     }

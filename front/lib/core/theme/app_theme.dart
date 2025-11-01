@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sorteio_front/core/utils/constants.dart';
 
 class AppTheme {
   static ThemeData get light {
     return ThemeData(
-      primaryColor: const Color(0xFFFF441A),
+      primaryColor: Constants.primary,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: const Color(0xFFFF441A),
-        secondary: const Color(0xFFFF07C2),
+        seedColor: Constants.primary,
+        secondary: Constants.backgroundLight,
       ),
       useMaterial3: true,
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
-import 'package:sorteio_front/core/features/bolao/pages/participante_detail_page.dart';
-import 'package:sorteio_front/core/features/bolao/pages/associar_usuario_page.dart';
+import 'package:sorteio_front/core/features/bolao/pages/usuario/participante_detail_page.dart';
+import 'package:sorteio_front/core/features/bolao/pages/usuario/associar_usuario_page.dart';
 import 'package:sorteio_front/core/features/bolao/controller/ranking_bolao_controller.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
 
@@ -136,6 +136,7 @@ class _BolaoParticipantsPageState extends State<BolaoParticipantsPage> {
                                   nome: p.nome,
                                   valoresEscolhidos: p.valoresEscolhidos,
                                   valoresAcertados: p.valoresAcertados,
+                                  inscricaoId: p.inscricaoId,
                                 ),
                               ),
                             );

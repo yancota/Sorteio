@@ -136,10 +136,10 @@ class InscricaoBolaoService {
         usuarioId: usuarioId,
         inscricaoId: inscricao.id,
         nome: nomeUsuario,
-        valoresEscolhidos: aposta.valores_escolhidos ? aposta.valores_escolhidos : [],
-        pontuacaoTotal: aposta.pontuacao || 0,
+        valoresEscolhidos: aposta ? aposta.valores_escolhidos ? aposta.valores_escolhidos : [] : [],
+        pontuacaoTotal: aposta ? aposta.pontuacao ? aposta.pontuacao : 0 : 0,
         posicao: 0,
-        valoresAcertados: aposta.valores_acertados ? aposta.valores_acertados : [],
+        valoresAcertados: aposta ? aposta.valores_acertados ? aposta.valores_acertados : [] : [],
         apto: inscricao.apto
       });
     }

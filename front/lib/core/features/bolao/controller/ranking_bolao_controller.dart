@@ -8,10 +8,10 @@ class Participant {
   final String nome;
   final int score;
   final bool apto;
-
   final List<String> valoresEscolhidos;
   final List<String> valoresAcertados;
   final int posicao;
+  final int inscricaoId;
 
   Participant({
     required this.nome,
@@ -20,16 +20,18 @@ class Participant {
     required this.valoresEscolhidos,
     required this.valoresAcertados,
     required this.posicao,
+    required this.inscricaoId,
   });
 
   factory Participant.fromDto(ParticipanteDto dto) {
     return Participant(
       nome: dto.nome,
       score: dto.pontuacaoTotal,
-      apto: dto.valoresAcertados.isNotEmpty,
+      apto: dto.valoresEscolhidos.isNotEmpty && dto.apto,
       valoresEscolhidos: dto.valoresEscolhidos,
       valoresAcertados: dto.valoresAcertados,
       posicao: dto.posicao,
+      inscricaoId: dto.inscricaoId,
     );
   }
 }
@@ -60,24 +62,11 @@ class RankingBolaoController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      debugPrint(
-        'RankingBolaoController: carregando participantes para bolao id=${bolao!.id}',
-      );
       final list = await _service.buscarRankingBolao(bolao!.id);
-      debugPrint(
-        'RankingBolaoController: resposta do service lista length=${list.length}',
-      );
       final participantsDto = <ParticipanteDto>[];
       for (final r in list) {
-        debugPrint(
-          '  item: hasData=${r.data != null} participantes=${r.data?.participantes.length ?? 0}',
-        );
         if (r.data != null) participantsDto.addAll(r.data!.participantes);
       }
-
-      debugPrint(
-        'RankingBolaoController: total participantes extraidos=${participantsDto.length}',
-      );
 
       _all.clear();
       _all.addAll(participantsDto.map((e) => Participant.fromDto(e)));

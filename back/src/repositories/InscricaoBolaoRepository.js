@@ -5,11 +5,11 @@ const pool = new Pool(dbConfig);
 class InscricaoBolaoRepository {
   // Criar uma nova inscrição
   async create(inscricaoData) {
-    const { bolao_id, usuario_id, apto, pontuacao_total } = inscricaoData;
+    const { bolao_id, usuario_id, apto,  } = inscricaoData;
     const result = await pool.query(
-      `INSERT INTO inscricoes_bolao (bolao_id, usuario_id, apto, pontuacao_total, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *`,
-      [bolao_id, usuario_id, apto !== undefined ? apto : true, pontuacao_total || 0]
+      `INSERT INTO inscricoes_bolao (bolao_id, usuario_id, apto, created_at, updated_at)
+       VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *`,
+      [bolao_id, usuario_id, apto !== undefined ? apto : true]
     );
     return result.rows[0];
   }

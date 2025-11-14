@@ -26,6 +26,26 @@ class BolaoService {
     }
   }
 
+
+  Future<BolaoDto> criarBolao(String nome, int quantidadeCampeao, bool reiniciarBolao, double valor) async {
+    String endpoint = '/boloes';
+
+    final body = {
+      'nome': nome,
+      'quantidadeCampeao': quantidadeCampeao,
+      'reiniciarBolao': reiniciarBolao,
+      'valor': valor
+    };
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final response = await apiService.post(endpoint, body: body);
+      return BolaoDto.fromJson(response['data'] as Map<String, dynamic>);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<RankingBolaoDto>> buscarRankingBolao(int? id) async {
     String endpoint = '/inscricoes/bolao/$id/ranking';
 
@@ -167,7 +187,6 @@ class BolaoService {
 
   Future<CriarSorteioResponseDto> realizarSorteio(int sorteioId) async {
     String endpoint = '/sorteios/$sorteioId/realizar';
-    debugPrint('Realizando sorteio: $sorteioId');
     final body = {};
 
     try {
@@ -180,4 +199,21 @@ class BolaoService {
       rethrow;
     }
   }
+
+    Future<bool> tornarApto(int inscricaoId) async {
+    String endpoint = '/inscricoes/$inscricaoId/tornar-apto';
+    final body = {};
+
+    try {
+      final apiService = ApiService(baseUrl: urlBase);
+      final response = await apiService.put(endpoint, body: body);
+
+      return response['success'] as bool? ?? false;
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 }

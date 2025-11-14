@@ -22,18 +22,4 @@ class CadastroUsuarioController {
       rethrow;
     }
   }
-
-  String formatDate(DateTime date) {
-    return DateFormat('dd/MM/yyyy HH:mm').format(date.toLocal());
-  }
-
-  String formatCurrency(String value) {
-    // Assumindo que value é uma string numérica
-    final num = double.tryParse(value) ?? 0.0;
-    return 'R\$ ${num.toStringAsFixed(2).replaceAll('.', ',')}';
-  }
-
-  String formatBoolean(bool value) {
-    return value ? 'Sim' : 'Não';
-  }
 }

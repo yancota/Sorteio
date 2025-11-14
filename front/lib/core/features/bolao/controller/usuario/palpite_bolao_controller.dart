@@ -75,4 +75,18 @@ class PalpiteBolaoController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> tornarApto(
+    int id
+  ) async {
+    try {
+      final response = await _service.tornarApto(
+        id,
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

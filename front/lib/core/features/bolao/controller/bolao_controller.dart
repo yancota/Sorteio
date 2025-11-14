@@ -14,14 +14,33 @@ class BolaoController {
     }
   }
 
+  Future<BolaoDto> criarBolao(
+    String nome,
+    int quantidadeCampeao,
+    bool reiniciarBolao,
+    double valor,
+  ) async {
+    try {
+      final response = await _service.criarBolao(
+        nome,
+        quantidadeCampeao,
+        reiniciarBolao,
+        valor,
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   String formatDate(DateTime date) {
     return DateFormat('dd/MM/yyyy HH:mm').format(date.toLocal());
   }
 
   String formatCurrency(String value) {
-    // Assumindo que value é uma string numérica
-    final num = double.tryParse(value) ?? 0.0;
-    return 'R\$ ${num.toStringAsFixed(2).replaceAll('.', ',')}';
+    final v = double.tryParse(value) ?? 0.0;
+    final fmt = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+    return fmt.format(v);
   }
 
   String formatBoolean(bool value) {

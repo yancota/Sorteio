@@ -40,8 +40,11 @@ class _BolaoPageState extends State<BolaoPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Encontre um Bolão'), elevation: 0),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: navegar para criação de bolão
+        onPressed: () async {
+          final result = await Modular.to.pushNamed('/bolao/criar');
+          if (result == true) {
+            _refresh();
+          }
         },
         backgroundColor: primary,
         foregroundColor: Colors.white,
@@ -192,7 +195,10 @@ class _BolaoPageState extends State<BolaoPage> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(12),
                             onTap: () {
-                              Modular.to.pushNamed('/bolao/detail', arguments: bolao);
+                              Modular.to.pushNamed(
+                                '/bolao/detail',
+                                arguments: bolao,
+                              );
                             },
                             child: Container(
                               decoration: BoxDecoration(

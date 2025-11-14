@@ -84,6 +84,18 @@ class _BuscarUsuariosScreenState extends State<BuscarUsuariosScreen> {
           fontWeight: FontWeight.bold,
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final result = await Modular.to.pushNamed('/usuario/cadastro');
+          if (result != null && result is UsuarioDto) {
+            _fetch();
+          }
+        },
+        backgroundColor: Constants.primary,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.person_add),
+        label: const Text('Cadastrar Usuário'),
+      ),
       body: RefreshIndicator(
         onRefresh: _fetch,
         child: Column(
@@ -135,7 +147,9 @@ class _BuscarUsuariosScreenState extends State<BuscarUsuariosScreen> {
                         ),
                       ),
                       title: Text(u.nome),
-                      subtitle: u.telefone != null ? Text(u.telefone!) : null,
+                      subtitle: u.telefone != null
+                          ? Text(_formatPhone(u.telefone!))
+                          : null,
                       onTap: () {
                         // retorna usuário selecionado
                         Modular.to.pop(u);
@@ -160,5 +174,20 @@ class _BuscarUsuariosScreenState extends State<BuscarUsuariosScreen> {
     if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
     return (parts.first.substring(0, 1) + parts.last.substring(0, 1))
         .toUpperCase();
+  }
+
+  String _formatPhone(String raw) {
+    final digits = raw.replaceAll(RegExp(r'\D'), '');
+    if (digits.isEmpty) return raw;
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 6) {
+      return '(${digits.substring(0, 2)}) ${digits.substring(2)}';
+    }
+    if (digits.length <= 10) {
+      return '(${digits.substring(0, 2)}) ${digits.substring(2, 6)}-${digits.substring(6)}';
+    }
+    // 11+ digits (most common: 11 digits)
+    final end = digits.length < 11 ? digits.length : 11;
+    return '(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7, end)}';
   }
 }

@@ -136,8 +136,8 @@ class InscricaoBolaoController {
   async adicionarPontuacao(req, res) {
     try {
       const inscricao = await InscricaoBolaoService.adicionarPontuacao(
-        req.params.id,
-        req.body.pontos
+          req.params.id,
+          req.body.pontos
       );
       return res.status(200).json({
         success: true,
@@ -184,6 +184,27 @@ class InscricaoBolaoController {
       });
     }
   }
-}
 
+  async tornarApto(req, res) {
+    try {
+      console.log('req.params:', req.params);
+      const id = req.params.id;
+      console.log('ID recebido:', id);
+
+      const resultado = await InscricaoBolaoService.tornarApto(id);
+      console.log('Resultado tornarApto:', resultado);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Inscrição agora está apta'
+      });
+    } catch (error) {
+      console.error('Erro tornarApto:', error);
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+  }
+}
 module.exports = new InscricaoBolaoController();

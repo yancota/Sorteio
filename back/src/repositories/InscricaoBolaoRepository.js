@@ -92,6 +92,14 @@ class InscricaoBolaoRepository {
     const result = await pool.query('DELETE FROM inscricoes_bolao WHERE id = $1', [id]);
     return result.rowCount > 0;
   }
+
+  async tornarApto(id) {
+    const result = await pool.query(
+      `UPDATE inscricoes_bolao SET apto = true, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      [id]
+    );
+    return result.rows[0] || null;
+  }
 }
 
 module.exports = new InscricaoBolaoRepository();

@@ -332,4 +332,6 @@ router.post('/:id/resetar-pontuacao', InscricaoBolaoController.resetarPontuacao)
  */
 router.delete('/:id', InscricaoBolaoController.delete);
 
+router.put("/:id/tornar-apto", InscricaoBolaoController.tornarApto);
+
 module.exports = router;

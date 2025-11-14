@@ -4,15 +4,21 @@ import 'package:sorteio_front/core/features/bolao/model/bolao_dto.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-class BolaoDetailPage extends StatelessWidget {
+class BolaoDetailPage extends StatefulWidget {
   final BolaoDto bolao;
 
   const BolaoDetailPage({Key? key, required this.bolao}) : super(key: key);
 
   @override
+  State<BolaoDetailPage> createState() => _BolaoDetailPageState();
+}
+
+class _BolaoDetailPageState extends State<BolaoDetailPage> {
+
+  @override
   Widget build(BuildContext context) {
     final controller = BolaoController();
-    final prize = controller.formatCurrency(bolao.valor);
+    final prize = controller.formatCurrency(widget.bolao.valor);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +27,7 @@ class BolaoDetailPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          bolao.nome,
+          widget.bolao.nome,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -65,7 +71,7 @@ class BolaoDetailPage extends StatelessWidget {
                   subtitle: 'Veja quem está participando',
                   onTap: () {
                     // Navega via Modular passando o bolão como argumento
-                    Modular.to.pushNamed('/bolao/participantes', arguments: bolao);
+                    Modular.to.pushNamed('/bolao/participantes', arguments: widget.bolao);
                   },
                 ),
 
@@ -78,7 +84,7 @@ class BolaoDetailPage extends StatelessWidget {
                   title: 'Sorteios',
                   subtitle: 'Acompanhe os resultados',
                   onTap: () {
-                    Modular.to.pushNamed('/bolao/sorteios', arguments: bolao);
+                    Modular.to.pushNamed('/bolao/sorteios', arguments: widget.bolao);
                   },
                 ),
 

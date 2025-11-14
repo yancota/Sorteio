@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:sorteio_front/core/features/bolao/controller/usuario/palpite_bolao_controller.dart';
 import 'package:sorteio_front/core/utils/constants.dart';
 
-class ParticipanteDetailPage extends StatelessWidget {
+class ParticipanteDetailPage extends StatefulWidget {
   final int? id;
   final String nome;
   final List<String> valoresEscolhidos;
   final List<String> valoresAcertados;
   final int inscricaoId;
+  final bool apto;
 
   const ParticipanteDetailPage({
     Key? key,
@@ -16,13 +18,85 @@ class ParticipanteDetailPage extends StatelessWidget {
     required this.valoresEscolhidos,
     required this.valoresAcertados,
     required this.inscricaoId,
+    required this.apto,
   }) : super(key: key);
+
+  @override
+  State<ParticipanteDetailPage> createState() => _ParticipanteDetailPageState();
+}
+
+class _ParticipanteDetailPageState extends State<ParticipanteDetailPage> {
+  final controller = PalpiteBolaoController();
+  bool? _apto;
+
+  @override
+  void initState() {
+    super.initState();
+    _apto = widget.apto;
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _tornarApto() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar'),
+        content: const Text('Deseja tornar este usuário apto para participar?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Constants.primary),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Confirmar',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        final success = await controller.tornarApto(widget.inscricaoId);
+        if (success && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Usuário tornado apto com sucesso')),
+          );
+          setState(() {
+            _apto = true;
+          });
+        } else if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Falha ao tornar usuário apto')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Erro: $e')));
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(nome, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          widget.nome,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -38,13 +112,13 @@ class ParticipanteDetailPage extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Grid de números escolhidos
-            if (valoresEscolhidos.isNotEmpty)
+            if (widget.valoresEscolhidos.isNotEmpty)
               Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 12,
                 runSpacing: 12,
-                children: valoresEscolhidos.map((v) {
-                  final acertou = valoresAcertados.contains(v);
+                children: widget.valoresEscolhidos.map((v) {
+                  final acertou = widget.valoresAcertados.contains(v);
                   return _numberChip(v, acertou, context);
                 }).toList(),
               )
@@ -68,14 +142,30 @@ class ParticipanteDetailPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
+                    if (_apto != null && !_apto!) ...[
+                      ElevatedButton(
+                        onPressed: _tornarApto,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
+                          ),
+                        ),
+                        child: const Text('Tornar Usuário Apto'),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     ElevatedButton(
                       onPressed: () {
-                        if (id != null) {
+                        if (widget.id != null) {
                           Modular.to.pushNamed(
                             '/bolao/fazer_aposta',
                             arguments: {
-                              'inscricaoId': inscricaoId,
-                              'valoresEscolhidos': valoresEscolhidos,
+                              'inscricaoId': widget.inscricaoId,
+                              'valoresEscolhidos': widget.valoresEscolhidos,
+                              'apto': _apto,
                             },
                           );
                         }
@@ -93,8 +183,6 @@ class ParticipanteDetailPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-           
           ],
         ),
       ),

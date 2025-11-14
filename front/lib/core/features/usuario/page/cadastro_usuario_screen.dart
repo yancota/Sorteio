@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sorteio_front/core/features/usuario/model/usuario_dto.dart';
 import 'package:sorteio_front/core/features/usuario/service/usuario_service.dart';
 
@@ -7,6 +8,39 @@ class CadastroUsuarioScreen extends StatefulWidget {
 
   @override
   State<CadastroUsuarioScreen> createState() => _CadastroUsuarioScreenState();
+}
+
+class _PhoneInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    var digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    if (digits.length > 11) digits = digits.substring(0, 11);
+
+    String formatted = digits;
+
+    if (digits.isEmpty) {
+      formatted = '';
+    } else if (digits.length <= 2) {
+      formatted = '(${digits}';
+    } else if (digits.length <= 6) {
+      formatted = '(${digits.substring(0, 2)}) ${digits.substring(2)}';
+    } else if (digits.length <= 10) {
+      formatted =
+          '(${digits.substring(0, 2)}) ${digits.substring(2, 6)}-${digits.substring(6)}';
+    } else {
+      // 11 dígitos
+      formatted =
+          '(${digits.substring(0, 2)}) ${digits.substring(2, 7)}-${digits.substring(7)}';
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
 }
 
 class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
@@ -54,6 +88,15 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
     }
   }
 
+  // Formatter simples para números de telefone brasileiros
+  // Formatos:
+  // 11 dígitos -> (AA) ABBBB-CCCC  e.g. (11) 98765-4321
+  // 10 dígitos -> (AA) BBBB-CCCC   e.g. (11) 8765-4321
+  // Enquanto digita aplica máscara
+  TextInputFormatter phoneInputFormatter() {
+    return _PhoneInputFormatter();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +130,11 @@ class _CadastroUsuarioScreenState extends State<CadastroUsuarioScreen> {
                 ),
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(11),
+                  phoneInputFormatter(),
+                ],
                 validator: (v) {
                   if (v == null || v.trim().isEmpty)
                     return 'Telefone é obrigatório';

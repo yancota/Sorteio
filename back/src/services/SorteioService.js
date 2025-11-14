@@ -66,28 +66,37 @@ class SorteioService {
     }
 
     const valoresSorteados = sorteio.valores_sorteados;
-    console.log('[Sorteio] Realizando sorteio:', id, 'valores sorteados:', valoresSorteados);
     const bolaoId = sorteio.bolao_id;
     const inscricoes = await InscricaoBolaoRepository.findByBolao(bolaoId);
-    console.log('[Sorteio] Inscrições encontradas:', inscricoes.length);
-
     for (const inscricao of inscricoes) {
 
       const apostas = await ApostaRepository.findByInscricao(inscricao.id);
       if (apostas && apostas.length > 0) {
         const aposta = apostas[0];
 
-        const valoresEscolhidos = Array.isArray(aposta.valores_escolhidos) ? aposta.valores_escolhidos : [];
-        const valoresAcertados = valoresEscolhidos.filter(valor => valoresSorteados.includes(valor));
+        console.log('valoresEscolhidos:', aposta.valores_escolhidos);
+console.log('valoresSorteados:', valoresSorteados);
+console.log('valores acertados', aposta.valores_acertados)
 
-        await ApostaRepository.updateValoresAcertados(aposta.id, valoresAcertados);
-        
-        const pontuacao = valoresAcertados.length;
-        
-        const pontuacaoAtual = inscricao.pontuacaoTotal || 0;
-        const novaPontuacao = pontuacaoAtual + pontuacao;
-        console.log('[Sorteio] Atualizando pontuação total da inscrição:', inscricao.id, 'de', pontuacaoAtual, 'para', novaPontuacao);
-        await ApostaRepository.updatePontuacao(aposta.id, novaPontuacao);
+const valoresEscolhidos = Array.isArray(aposta.valores_escolhidos) ? aposta.valores_escolhidos : [];
+console.log('valoresEscolhidos (array):', valoresEscolhidos);
+
+const valoresAcertados = valoresEscolhidos.filter(valor => valoresSorteados.includes(valor));
+console.log('valoresAcertados:', valoresAcertados);
+
+console.log('valoresAcertados anteriores:', aposta.valores_acertados);
+
+const valoresUpdate = Array.from(new Set([
+  ...(aposta.valores_acertados || []),
+  ...valoresAcertados
+])).map(Number);
+console.log('valoresUpdate (acumulado):', valoresUpdate);
+
+await ApostaRepository.updateValoresAcertados(aposta.id, valoresUpdate);
+
+const pontuacao = valoresUpdate.length;
+console.log('pontuacao:', pontuacao);
+        await ApostaRepository.updatePontuacao(aposta.id, pontuacao);
       } else {
         console.log('[Sorteio] Nenhuma aposta encontrada para inscrição:', inscricao.id);
       }

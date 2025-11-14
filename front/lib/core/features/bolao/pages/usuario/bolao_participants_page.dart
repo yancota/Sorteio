@@ -137,6 +137,7 @@ class _BolaoParticipantsPageState extends State<BolaoParticipantsPage> {
                                   valoresEscolhidos: p.valoresEscolhidos,
                                   valoresAcertados: p.valoresAcertados,
                                   inscricaoId: p.inscricaoId,
+                                  apto: p.apto,
                                 ),
                               ),
                             );

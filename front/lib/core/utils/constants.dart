@@ -6,9 +6,9 @@ class Constants {
   static const String appName = 'Hangout';
   static const String appVersion = '1.0.0';
 
-  
   static const String urlWeb = 'http://localhost:8080/api';
-  static const String urlMobile = 'http://192.168.1.2:8080/api';
+  static const String urlMobile = 'https://untoned-karla-aroideous.ngrok-free.dev/api'; 
+  //'http://192.168.1.2:8080/api';
 
   String get baseUrl {
     if (kIsWeb) {

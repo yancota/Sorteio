@@ -6,9 +6,14 @@ import 'package:sorteio_front/core/utils/constants.dart';
 class FazerApostaPage extends StatefulWidget {
   final int? inscricaoId;
   final List<String>? valoresEscolhidos;
+  final bool? apto;
 
-  const FazerApostaPage({Key? key, this.inscricaoId, this.valoresEscolhidos})
-    : super(key: key);
+  const FazerApostaPage({
+    Key? key,
+    this.inscricaoId,
+    this.valoresEscolhidos,
+    this.apto,
+  }) : super(key: key);
 
   @override
   State<FazerApostaPage> createState() => _FazerApostaPageState();
@@ -106,7 +111,10 @@ class _FazerApostaPageState extends State<FazerApostaPage> {
                             vertical: 12,
                           ),
                         ),
-                        child: const Text('Adicionar', style: TextStyle(color: Colors.white),),
+                        child: const Text(
+                          'Adicionar',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -150,7 +158,10 @@ class _FazerApostaPageState extends State<FazerApostaPage> {
                                 strokeWidth: 2,
                               ),
                             )
-                          : const Text('Confirmar Aposta', style: TextStyle(color: Colors.white),),
+                          : const Text(
+                              'Confirmar Aposta',
+                              style: TextStyle(color: Colors.white),
+                            ),
                     ),
                   ),
                 ),

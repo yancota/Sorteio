@@ -215,6 +215,15 @@ class InscricaoBolaoService {
 
     return await InscricaoBolaoRepository.delete(id);
   }
+
+  async tornarApto(id){
+    const inscricao = await InscricaoBolaoRepository.findById(id);
+    if (!inscricao) {
+      throw new Error('Inscrição não encontrada');
+    }
+
+    return await InscricaoBolaoRepository.tornarApto(id);
+  }
 }
 
 module.exports = new InscricaoBolaoService();

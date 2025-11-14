@@ -38,7 +38,6 @@ class Aposta {
     this.valoresEscolhidos.push(valor);
   }
 
-  // Calcula acertos comparando com um sorteio específico
   calcularAcertos(sorteio) {
     if (!sorteio || !sorteio.valoresSorteados) {
       return 0;

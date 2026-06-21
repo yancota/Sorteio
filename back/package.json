@@ -7,9 +7,9 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest",
-    "test:unit": "jest --testPathPattern=tests/unit",
-    "test:integration": "jest --testPathPattern=tests/integration",
-    "test:acceptance": "jest --testPathPattern=tests/acceptance"
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:acceptance": "jest tests/acceptance"
   },
   "keywords": [],
   "author": "",

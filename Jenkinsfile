@@ -83,7 +83,9 @@ pipeline {
 
         stage('Deploy to Render') {
             when {
-                branch 'main'
+                expression {
+                    return env.GIT_BRANCH?.contains('main') || env.BRANCH_NAME == 'main'
+                }
             }
             steps {
                 // Utiliza a credencial 'RENDER_DEPLOY_HOOK' cadastrada no Jenkins

@@ -64,16 +64,18 @@ require('dotenv').config({ path: '.env.bolao' });
 
         app.use('/api', routes);
 
-        app.listen(PORT, () => {
-          console.log(`Servidor rodando na porta ${PORT}`);
-          console.log(`Acesse: http://localhost:${PORT}`);
-          console.log(`Documentação: http://localhost:${PORT}/api-docs`);
-          console.log(`\nConfiguração do Banco:`);
-          console.log(`- Host: ${process.env.DB_HOST || 'localhost'}`);
-          console.log(`- Port: ${process.env.DB_PORT || '5432'}`);
-          console.log(`- Database: ${process.env.DB_NAME || 'sorteio'}`);
-          console.log(`- User: ${process.env.DB_USER || 'postgres'}`);
-        });
+        if (process.env.NODE_ENV !== 'test') {
+          app.listen(PORT, () => {
+            console.log(`Servidor rodando na porta ${PORT}`);
+            console.log(`Acesse: http://localhost:${PORT}`);
+            console.log(`Documentação: http://localhost:${PORT}/api-docs`);
+            console.log(`\nConfiguração do Banco:`);
+            console.log(`- Host: ${process.env.DB_HOST || 'localhost'}`);
+            console.log(`- Port: ${process.env.DB_PORT || '5432'}`);
+            console.log(`- Database: ${process.env.DB_NAME || 'sorteio'}`);
+            console.log(`- User: ${process.env.DB_USER || 'postgres'}`);
+          });
+        }
 
         module.exports = app;
       }

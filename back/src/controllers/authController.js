@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         res.status(200).json({
             message: "Login bem-sucedido!",
             token: token,
-            cicd: "Teste CI/CD"
+            cicd: "mensagem teste de validação"
         });
 
     } catch (error) {

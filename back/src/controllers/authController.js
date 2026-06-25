@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         res.status(200).json({
             message: "Login bem-sucedido!",
             token: token,
-            cicd: "mensagem teste de validação 2"
+            cicd: "Apresentação do Jenkins Gerência de Configuração"
         });
 
     } catch (error) {

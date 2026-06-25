@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         res.status(200).json({
             message: "Login bem-sucedido!",
             token: token,
-            cicd: "Deploy CI/CD verificado com sucesso no Render!"
+            cicd: "Teste CI/CD"
         });
 
     } catch (error) {
